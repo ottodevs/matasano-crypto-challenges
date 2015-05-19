@@ -1,0 +1,6 @@
+This is my solution (still in the making) for the matasano crypto challenges on cryptopals.com, just for fun. I'm aware many of the solutions are suboptimal.
+
+To compile setx:
+$make setx.x
+
+to test a particular challenge run the set and input the number of the challenge

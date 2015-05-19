@@ -27,6 +27,8 @@ reset: clean
 
 clean:
 	rm -f $(OBJECTS)
+	rm -f *~
+	rm -f *.swp
 
 rebuild: $(MAIN)
 	$(Cpp) -lssl -lcrypto -c $(MAIN)

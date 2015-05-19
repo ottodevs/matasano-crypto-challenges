@@ -125,3 +125,6 @@ int User::getUid(){
     return out;
 }
 
+vector<byte> User::globKey(16, 0);
+int User::id_gen = 0;
+

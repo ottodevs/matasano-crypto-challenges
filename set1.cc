@@ -9,11 +9,6 @@
 #include "User.hh"
 #include "Target.hh"
 
-int User::id_gen = 0;
-vector<byte> User::globKey (16,0);
-vector<byte> Target::globKey (16,0);
-vector<byte> Target::prepend (16,0);
-
 //Convert hex to base64
 void ch1(){
     vector<byte> v = Conversion::hexToByteArray(ch1_str); //string ch1_str located at utils.cpp

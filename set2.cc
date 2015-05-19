@@ -9,11 +9,6 @@
 #include "Attack.hh"
 #include "Analysis.hh"
 
-vector<byte> Target::globKey (16,0);
-vector<byte> Target::prepend (16,0);
-vector<byte> User::globKey (16,0);
-int User::id_gen = 0;
-
 //Implement PKCS#7 padding
 void ch9(){
     string ys = "YELLOW SUBMARINE";

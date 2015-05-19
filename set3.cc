@@ -9,11 +9,6 @@
 #include "Output.hh"
 #include "Aes.hh"
 
-vector<byte> Target::globKey (16, 0);
-vector<byte> Target::prepend (16, 0);
-vector<byte> User::globKey (16, 0);
-int User::id_gen = 0;
-
 //The CBC padding oracle
 void ch17(){
     Target google;
@@ -73,6 +68,10 @@ void ch19(){
             keys[line_num] = (byte)key;
         cout << "key " << line_num << "-->" << (int)keys[line_num] <<  endl;
     }
+}
+
+void ch20(){
+    vector<string> strings = File::getStrings("INPUT/ch20.txt");
 }
 
 /*

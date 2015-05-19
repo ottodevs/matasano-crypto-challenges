@@ -68,8 +68,5 @@ vector<byte> Target::getSecretKey(){
     return secretKey;
 }
 
-
-
-
-
-
+vector<byte> Target::globKey(16, 0);
+vector<byte> Target::prepend(16, 0);

@@ -3,3 +3,6 @@
 
 #objects
 *.o
+
+#swp
+*.swp

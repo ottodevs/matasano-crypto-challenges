@@ -8,6 +8,7 @@
 #include "Attack.hh"
 #include "Output.hh"
 #include "Aes.hh"
+#include "RNG.hh"
 
 //The CBC padding oracle
 void ch17(){
@@ -133,9 +134,17 @@ void ch20(){
     }
 }
 
+void ch21(){
+    int seed = 9834;
+    rng mt(seed);
+    //100 random numbers:
+    for(int i = 0; i < 100; ++i)
+        cout << mt.extract_number() << endl;
+}
+
 /*
  * MAIN
  */
 int main(){
-    ch19();
+    ch21();
 }

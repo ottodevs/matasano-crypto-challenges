@@ -70,6 +70,4 @@ inline bool remove_padding(vector<byte>& data){
     return cond;
 }
 
-
-
 #endif

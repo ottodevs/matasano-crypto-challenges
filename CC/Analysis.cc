@@ -74,6 +74,8 @@ int Analysis::find_key_size(const vector<byte>& blockArray, int a, int b){
 }
 
 int Analysis::frequency_evaluation(const vector<byte>& v){
+    //TODO: whole function could be made simpler with maps
+
     vector<Letter> frequency (26 + 1); //26 letters + 1 for symbols
     int score = 0;
     for (int i = 0; i < 26+1; ++i){
@@ -124,10 +126,13 @@ int Analysis::frequency_evaluation(const vector<byte>& v){
         }
     }
     
-    //eliminate results with strange characters
+    //eliminate and penalize results with strange characters
     for(int i = 0; i < v.size(); ++i){
         if ((v[i] >= 127 or v[i] < 32) and v[i] != 8 and v[i] != 9 and v[i] != 10)
             return -1;
+        //this chars penalize but don't eliminate
+        if(v[i] == '|' or v[i] == '@' or v[i] == ';' or v[i] == '^' or v[i] == '`' or v[i] == '~' or v[i] == '*' or v[i] == '<' or v[i] == '>')
+            score -= 2;
     }
 
     //penalty for too many symbols
@@ -140,6 +145,14 @@ int Analysis::frequency_evaluation(const vector<byte>& v){
                 return score;
         }
     }
+
+    //penalty for too many numbers
+    int numbers = 0;
+    for(int i = 0; i < v.size(); ++i){
+        if((char)v[i] >= 48 and (char)v[i] < 58)
+            numbers++;
+    }
+    if(numbers >= max_occ) score -= 7;
 
     return score;
 }

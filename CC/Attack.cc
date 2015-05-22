@@ -1,29 +1,36 @@
 #include "Attack.hh"
 
 
-bool Attack::testBytes(const vector<byte> v, int thres){
+byte Attack::testBytes(const vector<byte> v, int thres){
     vector<byte> b;
-    bool printed = false;
+    byte key = 0;
+    int best = 0;
     for(int i = 0; i < 256; ++i){
         b = Xor::single_key_xor(v, (byte) i);
         int aux = Analysis::frequency_evaluation(b);
+        if(aux > best){
+            best = aux;
+            key = (byte)i;
+        }
         if(aux >= thres){
             cout << "(" << aux << ")";
             Output::printChar(b);
             cout << " [Key: " << i << "|ASCII:'";
             Output::printAscii(i);
             cout <<"']" << endl;
-            printed = true;
         }
     }
-    return printed;
+    cout << "best: " << (int)key << endl;
+    return key;
 }
 
-void Attack::findRepeatingKey(const vector< vector<byte> >& groupedBlock){
+vector<byte> Attack::findRepeatingKey(const vector< vector<byte> >& groupedBlock){
+    vector<byte> best_key (groupedBlock.size(), 0);
     for(int i = 0; i < groupedBlock.size(); ++i){
         cout << endl << "byte " << i << ":" << endl << endl;
-        testBytes(groupedBlock[i], THRES);
+        best_key[i] = testBytes(groupedBlock[i], THRES);
     }
+    return best_key;
 }
 
 void Attack::byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){

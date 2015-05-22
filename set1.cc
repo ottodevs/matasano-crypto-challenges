@@ -58,13 +58,25 @@ void ch6(){
     int ks = Analysis::find_key_size(cipher, 2, 40);
     cout << ">Best Keysize: " << ks << endl;
     cout << "-------------------------" << endl << endl;
-    Attack::findRepeatingKey(Analysis::groupBlock(cipher,ks));
+    vector<byte> keyV = Attack::findRepeatingKey(Analysis::groupBlock(cipher,ks));
     
-    char keyA[ks + 1];
-    cout << endl << "introduce repeating key (" << ks << " characters):" << endl << ">>";
-    cin.getline(keyA, ks+1);
-    cin.getline(keyA, ks+1);
-    string key(keyA);
+    cout << "detected key: ";
+    Output::printChar(keyV);
+    cout << endl << "Change? (y/n)";
+    char ans;
+    cin >> ans;
+
+    string key;
+    if(ans == 'Y' or ans == 'y'){
+        char keyA[ks + 1];
+        cout << endl << "introduce repeating key (" << ks << " characters):" << endl << ">>";
+        cin.getline(keyA, ks+1);
+        cin.getline(keyA, ks+1);
+        key = string(keyA);
+    }
+    else{
+        key = string(keyV.begin(), keyV.end());
+    }
     cout << endl << "-------------------------" << endl;
     vector<byte> plain = Xor::repeating_key_xor(cipher, key);
     Output::printChar(plain);

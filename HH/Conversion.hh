@@ -20,7 +20,7 @@ public:
 
     static vector<byte> b64ToByteArray(const vector<byte>& v); //b64 array to byte array
 
-    static vector<byte> stringToByteArray(const string& str); //ascii string to byte array. Kind of stupid, just for simplicity
+    static vector<byte> stringToByteArray(const string& str); //ascii string to byte array.
 
     static vector<byte> b64StringToByteArray(const string& str);
 

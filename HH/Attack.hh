@@ -20,12 +20,13 @@ private:
 
 public:
 
-    static bool testBytes(const vector<byte> v, int thres);
+    static byte testBytes(const vector<byte> v, int thres);
     /* Tries all 256 bytes as single-XOR keys and prints strings with score >= thres (use const THRES in utils):
      * (score)String [key]
+     * returns best key
      */
 
-    static void findRepeatingKey(const vector< vector<byte> >& groupedBlock); //analyses a grouped block byte by byte to find the repeating key
+    static vector<byte> findRepeatingKey(const vector< vector<byte> >& groupedBlock); //analyses a grouped block byte by byte to find the repeating key
 
     static void byte_at_a_time(vector<byte> (*f)(const vector<byte>&)); //should make return the vector
 

@@ -1,9 +1,8 @@
 #include "Output.hh"
 
 void Output::printB64(const vector<byte>& v){
-	for (int i = 0; i < v.size(); ++i){
+	for (int i = 0; i < v.size(); ++i)
         cout << table_64[(int)v[i]];
-	}
     cout << endl;
 }
  
@@ -13,6 +12,13 @@ void Output::printHex(const vector<byte>& v){
         byte aux = v[i] << 4;
         cout << table_hex[aux >> 4];
     }
+    cout << endl;
+}
+
+void Output::printInt(const vector<byte>& v){
+    cout << (int)v[0];
+    for(int i = 0; i < v.size(); ++i)
+        cout << " " << (int)v[i];
     cout << endl;
 }
 

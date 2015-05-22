@@ -12,17 +12,17 @@ class Output {
 public:
 
     static void printB64(const vector<byte>& v);
-    /* Pre: true */
-    /* Post: byte array printed as base64 */
+    /* byte array is printed as base64 */
 
 
     static void printHex(const vector<byte>& v);
-    /* Pre: true */
-    /* Post: byte array printed Hex encoded */
+    /* byte array is printed Hex encoded */
+
+    static void printInt(const vector<byte>& v);
+    /* byte array is printed as int values */
 
     static void printChar(const vector<byte>& v);
-    /* Pre: true */
-    /* Post: byte array printed as char array */
+    /* byte array is printed as char array */
 
     static void printAscii(int i);
     static void printAscii(byte i);

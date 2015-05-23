@@ -2,7 +2,8 @@
 #include "Target.hh"
 #include "User.hh"
 #include <cstdlib>
-#include <time.h>
+#include <ctime>
+#include <unistd.h>
 #include "Block.hh"
 #include "Conversion.hh"
 #include "Attack.hh"
@@ -135,16 +136,62 @@ void ch20(){
 }
 
 void ch21(){
-    int seed = 9834;
+    cout << "introduce seed to generate random numbers: ";
+    int seed;
+    cin >> seed;
     rng mt(seed);
     //100 random numbers:
     for(int i = 0; i < 100; ++i)
         cout << mt.extract_number() << endl;
 }
 
+void ch22(){
+    time_t secs;
+    time(&secs);
+    srand((unsigned int) secs);
+    int time1 = (int) rand() % 1000; 
+    int time2 = (int) rand() % 1000;
+
+
+    sleep(time1);
+
+    time_t seed = time(0);
+    rng mt(seed);
+
+    sleep(time2);
+
+    unsigned int n = mt.extract_number();
+    cout << "number generated: " << n << endl;
+    cout << "seed: ";
+    time_t start = time(0);
+    bool found = false;
+    for(int d = 0; d <= 1000 and not found; ++d){
+        rng r(start - d);
+        if(r.extract_number() == n){
+            found = true;
+            cout << start - d << endl;
+        }
+    }
+}
+
+/*
+ *  ch23:
+    unsigned long int y = z xor (z >> 18);
+    z = y xor ((y << 15) bitand 0xefc60000);
+    
+    y = z xor ((z << 7) bitand 0x9d2c5680);
+    y = z xor ((y << 7) bitand 0x9d2c5680);
+    y = z xor ((y << 7) bitand 0x9d2c5680);
+    z = z xor ((y << 7) bitand 0x9d2c5680);
+    
+    y = z xor (z >> 11);
+    y = z xor (y >> 11);
+
+ */
+
 /*
  * MAIN
  */
 int main(){
-    ch21();
+    ch22();
 }

@@ -12,6 +12,13 @@ rng::rng(int seed){
     }
 }
 
+rng::rng(unsigned int* s){
+    index = 0;
+    
+    for(int i = 0; i < 624; ++i, ++s)
+        MT[i] = *s;
+}
+
 unsigned int rng::extract_number(){
     if(index == 0) generate_numbers();
 
@@ -31,4 +38,12 @@ void rng::generate_numbers(){
         MT[i] = MT[(i+397)%624] xor (y >> 1);
         if(y%2 != 0) MT[i] = MT[i] xor 0x9908b0df;
     }
+}
+
+void rng::set_index(int i){
+    index = i;
+}
+
+unsigned int* rng::get_state(){
+    return &MT[0];
 }

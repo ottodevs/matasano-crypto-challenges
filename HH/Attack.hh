@@ -33,5 +33,9 @@ public:
     static vector<byte> padding_oracle_attack(const vector<byte>& c, const vector<byte> iv, Target tgt);
     /* returns unencrypted vector */
 
+    static unsigned int mt19937_untemper(unsigned int n);
+
+    static unsigned int mt19937_temper(unsigned int n);
+
 };
 #endif

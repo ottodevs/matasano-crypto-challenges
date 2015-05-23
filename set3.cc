@@ -174,24 +174,26 @@ void ch22(){
     }
 }
 
-/*
- *  ch23:
-    unsigned long int y = z xor (z >> 18);
-    z = y xor ((y << 15) bitand 0xefc60000);
-    
-    y = z xor ((z << 7) bitand 0x9d2c5680);
-    y = z xor ((y << 7) bitand 0x9d2c5680);
-    y = z xor ((y << 7) bitand 0x9d2c5680);
-    z = z xor ((y << 7) bitand 0x9d2c5680);
-    
-    y = z xor (z >> 11);
-    y = z xor (y >> 11);
 
- */
+void ch23(){
+    rng rand(453256);
+    unsigned int state[624];
+    cout << "generator output(numbers 625-645):" << endl;
+    for(int i = 0; i < 624; ++i){
+        unsigned int n = rand.extract_number();
+        state[i] = Attack::mt19937_untemper(n);
+    }
+    for(int i = 0; i < 20; ++i)
+        cout << rand.extract_number() << endl;
+    rng clone(&state[0]);
+    cout << "cloned generator output(first 20 numbers):" << endl;
+    for(int i = 0; i < 20; ++i)
+        cout << clone.extract_number() << endl;
+}
 
 /*
  * MAIN
  */
 int main(){
-    ch22();
+    ch23();
 }

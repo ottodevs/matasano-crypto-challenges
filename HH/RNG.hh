@@ -9,15 +9,23 @@ class rng {
 private:
 
     int index;
-    unsigned long int MT[624];
+    unsigned int MT[624];
 
 public:
 
+    //create rng from seed
     rng(int seed);
+
+    //create rng from state
+    rng(unsigned int* s);
 
     unsigned int extract_number();
 
     void generate_numbers();
+
+    void set_index(int i);
+
+    unsigned int* get_state();
 
 };
 #endif

@@ -175,9 +175,26 @@ vector<byte> Attack::break_block(const vector<byte>& b1, const vector<byte>& b2,
     return bytes;
 }
 
+unsigned int Attack::mt19937_untemper(unsigned int n){
+    unsigned long int z = n;
+    unsigned long int y = z xor (z >> 18);
+    z = y xor ((y << 15) bitand 0xefc60000);
+    
+    y = z xor ((z << 7) bitand 0x9d2c5680);
+    y = z xor ((y << 7) bitand 0x9d2c5680);
+    y = z xor ((y << 7) bitand 0x9d2c5680);
+    z = z xor ((y << 7) bitand 0x9d2c5680);
+    
+    y = z xor (z >> 11);
+    return (z xor (y >> 11));
+    return y;
+}
 
-
-
-
-
-
+unsigned int Attack::mt19937_temper(unsigned int n){
+    unsigned long int y = n;
+    y = y xor (y >> 11);
+    y = y xor ((y << 7) bitand (0x9d2c5680));
+    y = y xor ((y << 15) bitand (0xefc60000));
+    y = y xor (y >> 18);
+    return y; 
+}

@@ -4,7 +4,7 @@
 #include "utils.cpp"
 
 class rng {
-    /* user identity with various properties */
+    /* Implementation of the mt19937 mersenne twister RNG */
 
 private:
 

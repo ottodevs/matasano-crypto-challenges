@@ -1,12 +1,12 @@
 #include "Output.hh"
 
-void Output::printB64(const vector<byte>& v){
+void printB64(const vector<byte>& v){
 	for (int i = 0; i < v.size(); ++i)
         cout << table_64[(int)v[i]];
     cout << endl;
 }
  
-void Output::printHex(const vector<byte>& v){
+void printHex(const vector<byte>& v){
     for(int i = 0; i < v.size(); ++i){
         cout << table_hex[v[i] >> 4];
         byte aux = v[i] << 4;
@@ -15,14 +15,14 @@ void Output::printHex(const vector<byte>& v){
     cout << endl;
 }
 
-void Output::printInt(const vector<byte>& v){
+void printInt(const vector<byte>& v){
     cout << (int)v[0];
     for(int i = 0; i < v.size(); ++i)
         cout << " " << (int)v[i];
     cout << endl;
 }
 
-void Output::printChar(const vector<byte>& v){
+void printChar(const vector<byte>& v){
     for (int i = 0; i < v.size(); ++i){
         if (not ((v[i] >= 127 or v[i] < 32) and v[i] != 8 and v[i] != 9 and v[i] != 10))
             cout << (char)v[i];
@@ -32,14 +32,14 @@ void Output::printChar(const vector<byte>& v){
     //cout << endl;
 }
 
-void Output::printAscii(int i){
+void printAscii(int i){
     if (not ((i >= 127 or i < 32) and i != 8 and i != 9 and i != 10))
         cout << (char)i;
     else
         cout << "\\" << (int)i;
 }
 
-void Output::printAscii(byte i){
+void printAscii(byte i){
     if (not ((i >= 127 or i < 32) and i != 8 and i != 9 and i != 10))
         cout << (char)i;
     else

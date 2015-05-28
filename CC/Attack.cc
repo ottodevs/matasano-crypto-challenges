@@ -1,22 +1,22 @@
 #include "Attack.hh"
 
 
-byte Attack::testBytes(const vector<byte> v, int thres){
+byte testBytes(const vector<byte> v, int thres){
     vector<byte> b;
     byte key = 0;
     int best = 0;
     for(int i = 0; i < 256; ++i){
-        b = Xor::single_key_xor(v, (byte) i);
-        int aux = Analysis::frequency_evaluation(b);
+        b = single_key_xor(v, (byte) i);
+        int aux = frequency_evaluation(b);
         if(aux > best){
             best = aux;
             key = (byte)i;
         }
         if(aux >= thres){
             cout << "(" << aux << ")";
-            Output::printChar(b);
+            printChar(b);
             cout << " [Key: " << i << "|ASCII:'";
-            Output::printAscii(i);
+            printAscii(i);
             cout <<"']" << endl;
         }
     }
@@ -24,7 +24,7 @@ byte Attack::testBytes(const vector<byte> v, int thres){
     return key;
 }
 
-vector<byte> Attack::findRepeatingKey(const vector< vector<byte> >& groupedBlock){
+vector<byte> findRepeatingKey(const vector< vector<byte> >& groupedBlock){
     vector<byte> best_key (groupedBlock.size(), 0);
     for(int i = 0; i < groupedBlock.size(); ++i){
         cout << endl << "byte " << i << ":" << endl << endl;
@@ -33,7 +33,7 @@ vector<byte> Attack::findRepeatingKey(const vector< vector<byte> >& groupedBlock
     return best_key;
 }
 
-void Attack::byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){
+void byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){
     //block size
     int blockSize;
     {
@@ -56,12 +56,12 @@ void Attack::byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){
         vector<byte> first (blockSize, 0);
         first = f(first);
         vector<byte> shiftable(blockSize, 0);
-        Block::shiftBytes(shiftable, 1);
+        shiftBytes(shiftable, 1);
         vector<byte> aux = f(shiftable);
         int b2; //second occupied block (or unic) counting from 0
         bool found = false;
         for(int i = 0; i < aux.size() and not found; i += blockSize){
-            if(!Block::compareBlocks(&first[i], &aux[0], blockSize)){
+            if(!compareBlocks(&first[i], &aux[0], blockSize)){
                 b2 = i;
                 found = true;
             }
@@ -70,9 +70,9 @@ void Attack::byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){
         found = false;
         for(int i = 0; i < shiftable.size() - 1 and not found; ++i){
             //AAAABA||AAABAA ...
-            Block::shiftBytes(shiftable, 0);
+            shiftBytes(shiftable, 0);
             aux = f(shiftable);
-            if(Block::compareBlocks(&first[b2], &aux[b2], blockSize)){
+            if(compareBlocks(&first[b2], &aux[b2], blockSize)){
                 prependSize = i + 1;
                 found = true;
             }
@@ -89,7 +89,7 @@ void Attack::byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){
     }
     cout << "Append size: " << appendSize << " bytes" << endl;
     //ecb check
-    if(!Analysis::mode_detector(f)){
+    if(!mode_detector(f)){
         //cout << "function not encrypting in ECB mode" << endl;
         //return;
     }
@@ -103,22 +103,22 @@ void Attack::byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){
         for(int j = 0; j < 256 and not found; ++j){
             inj[inj.size() - 1] = j;
             vector<byte> injEnc = f(inj);
-            if(Block::compareBlocks(&injEnc[appendSize], &test[appendSize], blockSize)) //here
+            if(compareBlocks(&injEnc[appendSize], &test[appendSize], blockSize)) //here
                 found = true;
         }
-        Block::shiftBytes(inj,0);
+        shiftBytes(inj,0);
     }
     //append is in inj, starting from the pos bS - pS - 1
     for(int i = 0; i < (blockSize - prependSize) - 1; ++i){
-        Block::shiftBytes(inj,0);
+        shiftBytes(inj,0);
     }
-    inj = Block::copyFrom(&inj[0], appendSize);
+    inj = copyFrom(&inj[0], appendSize);
     cout << endl << "Append found!" << endl << "----------------------" << endl;
-    Output::printChar(inj);
+    printChar(inj);
     cout << endl;
 }
 
-vector<byte> Attack::padding_oracle_attack(const vector<byte>& c, const vector<byte> iv, Target tgt){
+vector<byte> padding_oracle_attack(const vector<byte>& c, const vector<byte> iv, Target tgt){
     vector<byte> plain (c.size(), 'X');
     vector<byte> b1 (16);
     vector<byte> b2 (16);
@@ -141,7 +141,7 @@ vector<byte> Attack::padding_oracle_attack(const vector<byte>& c, const vector<b
     return plain;
 }
 
-vector<byte> Attack::break_block(const vector<byte>& b1, const vector<byte>& b2, Target tgt){
+vector<byte> break_block(const vector<byte>& b1, const vector<byte>& b2, Target tgt){
     vector<byte> bytes(16, '.');
     //last byte
     vector<byte> simIV = b1;
@@ -175,7 +175,7 @@ vector<byte> Attack::break_block(const vector<byte>& b1, const vector<byte>& b2,
     return bytes;
 }
 
-unsigned int Attack::mt19937_untemper(unsigned int n){
+unsigned int mt19937_untemper(unsigned int n){
     unsigned long int z = n;
     unsigned long int y = z xor (z >> 18);
     z = y xor ((y << 15) bitand 0xefc60000);
@@ -190,7 +190,7 @@ unsigned int Attack::mt19937_untemper(unsigned int n){
     return y;
 }
 
-unsigned int Attack::mt19937_temper(unsigned int n){
+unsigned int mt19937_temper(unsigned int n){
     unsigned long int y = n;
     y = y xor (y >> 11);
     y = y xor ((y << 7) bitand (0x9d2c5680));

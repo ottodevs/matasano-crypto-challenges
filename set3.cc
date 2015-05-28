@@ -10,42 +10,43 @@
 #include "Output.hh"
 #include "Aes.hh"
 #include "RNG.hh"
+#include "Stream.hh"
 
 //The CBC padding oracle
 void ch17(){
     Target google;
-    Target::globKey = Block::gen_random_block();
-    vector<string> lines = File::getStrings("INPUT/ch17.txt");
+    Target::globKey = gen_random_block();
+    vector<string> lines = getStrings("INPUT/ch17.txt");
     time_t secs;
     time(&secs);
     srand((unsigned int) secs);
     int line = (int) rand() % 10;
 
-    vector<byte> cipher =  Conversion::b64StringToByteArray(lines[line]);
+    vector<byte> cipher =  b64StringToByteArray(lines[line]);
 
     cipher = google.encrypt_CBC(cipher);
 
-    vector<byte> plain = Attack::padding_oracle_attack(cipher, Target::globKey, google);
+    vector<byte> plain = padding_oracle_attack(cipher, Target::globKey, google);
     remove_padding(plain);
     cout << "string found!!" << endl;
-    Output::printChar(plain);
+    printChar(plain);
     cout << endl;
 }
 
 //Implement CTR
 void ch18(){
-    vector<byte> v = Conversion::b64StringToByteArray(ch18_str);
+    vector<byte> v = b64StringToByteArray(ch18_str);
     unsigned long int nc = 0;
-    vector<byte> nonce = Conversion::intToByteArray(nc, false);
-    v = Aes::aes_128_CTR(v, keySub, nonce);
-    Output::printChar(v);
+    vector<byte> nonce = intToByteArray(nc, false);
+    v = aes_128_CTR(v, keySub, nonce);
+    printChar(v);
     cout << endl;
 }
 
 //Break fixed-nonce CTR mode (Substitutions)
 void ch19(){
-    vector<string> strings = File::getStrings("INPUT/ch19.txt");
-    vector<byte> nonce = Conversion::intToByteArray(0, false);
+    vector<string> strings = getStrings("INPUT/ch19.txt");
+    vector<byte> nonce = intToByteArray(0, false);
 
     int maxSize = 0;
     for(int i = 0; i < strings.size(); ++i){
@@ -57,10 +58,10 @@ void ch19(){
     while(not exit){
         for(int i = 0; i < strings.size(); ++i){
             cout << "[" << i + 1 << "]";
-            vector<byte> v = Aes::aes_128_CTR(Conversion::b64StringToByteArray(strings[i]), keySub, nonce);
+            vector<byte> v = aes_128_CTR(b64StringToByteArray(strings[i]), keySub, nonce);
             for(int l = 0; l < v.size(); ++l)
                 v[l] = keys[l] xor v[l];
-            Output::printChar(v);
+            printChar(v);
             cout << endl;
         }
         cout << endl << "Add substitution:";
@@ -83,12 +84,12 @@ void ch20(){
      * and change some bytes of the detected key
      */
 
-    vector<string> strings = File::getStrings("INPUT/ch20.txt");
-    vector<byte> nonce = Conversion::intToByteArray(0, false);
+    vector<string> strings = getStrings("INPUT/ch20.txt");
+    vector<byte> nonce = intToByteArray(0, false);
 
     vector< vector<byte> > ciphers;
     for(int i = 0; i < strings.size(); ++i){
-        ciphers.push_back(Aes::aes_128_CTR(Conversion::b64StringToByteArray(strings[i]), keySub, nonce));
+        ciphers.push_back(aes_128_CTR(b64StringToByteArray(strings[i]), keySub, nonce));
     }
 
     int min_size = ciphers[0].size();
@@ -109,10 +110,10 @@ void ch20(){
             groupedBlock[i].push_back(ciphers[j][i]);
     }
 
-    vector<byte> keyV = Attack::findRepeatingKey(groupedBlock);
+    vector<byte> keyV = findRepeatingKey(groupedBlock);
 
     cout << endl << "detected key: ";
-    Output::printInt(keyV);
+    printInt(keyV);
     cout << endl << "-------------------------" << endl;
     cout << "i key to change a byte, -1 to end:" << endl;
     int in, ke;
@@ -123,14 +124,14 @@ void ch20(){
         cin >> in;
     }
     cout << "new key: ";
-    Output::printInt(keyV);
+    printInt(keyV);
 
     for(int i = 0; i < strings.size(); ++i){
         if(i % min_size == 0)
             cout << endl;
-        vector<byte> plain = Xor::repeating_key_xor(ciphers[i], keyV);
+        vector<byte> plain = repeating_key_xor(ciphers[i], keyV);
 
-        Output::printChar(plain);
+        printChar(plain);
         cout << endl;
     }
 }
@@ -181,7 +182,7 @@ void ch23(){
     cout << "generator output(numbers 625-645):" << endl;
     for(int i = 0; i < 624; ++i){
         unsigned int n = rand.extract_number();
-        state[i] = Attack::mt19937_untemper(n);
+        state[i] = mt19937_untemper(n);
     }
     for(int i = 0; i < 20; ++i)
         cout << rand.extract_number() << endl;
@@ -191,9 +192,18 @@ void ch23(){
         cout << clone.extract_number() << endl;
 }
 
+void ch24(){
+    string message = "AAAAAAAAAAAAAA";
+    vector<byte> v = stringToByteArray(message);
+    v = mt19937(v, 98764);
+    v = mt19937(v, 98764);
+    printChar(v);
+    cout << endl;
+}
+
 /*
  * MAIN
  */
 int main(){
-    ch23();
+    ch24();
 }

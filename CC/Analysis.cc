@@ -2,7 +2,7 @@
 
 //PRIVATE
 
-int Analysis::bitsInByte(byte b){
+int bitsInByte(byte b){
     int bits = 0;
     for(int i = 0; i < 8; ++i){
         if (b % 2 != 0)
@@ -12,7 +12,7 @@ int Analysis::bitsInByte(byte b){
     return bits;
 }
 
-bool Analysis::comp(Letter l1, Letter l2){
+bool comp(Letter l1, Letter l2){
     if(l1.occurences > l2.occurences)
         return true;
     return false;
@@ -20,7 +20,7 @@ bool Analysis::comp(Letter l1, Letter l2){
 
 //PUBLIC
 
-int Analysis::hamming_distance(const vector<byte>& x, const vector<byte>& y){
+int hamming_distance(const vector<byte>& x, const vector<byte>& y){
 
     vector<byte> out (x.size());
     for(int i = 0; i < x.size(); ++i){
@@ -34,7 +34,7 @@ int Analysis::hamming_distance(const vector<byte>& x, const vector<byte>& y){
     return total;
 }
 
-int Analysis::find_key_size(const vector<byte>& blockArray, int a, int b){
+int find_key_size(const vector<byte>& blockArray, int a, int b){
 
     cout << "Normalized values:" << endl;
 
@@ -73,7 +73,7 @@ int Analysis::find_key_size(const vector<byte>& blockArray, int a, int b){
     return ret + a;
 }
 
-int Analysis::frequency_evaluation(const vector<byte>& v){
+int frequency_evaluation(const vector<byte>& v){
     //TODO: whole function could be made simpler with maps
 
     vector<Letter> frequency (26 + 1); //26 letters + 1 for symbols
@@ -157,7 +157,7 @@ int Analysis::frequency_evaluation(const vector<byte>& v){
     return score;
 }
 
-vector< vector<byte> > Analysis::groupBlock(vector<byte> blockArray, int keySize){
+vector< vector<byte> > groupBlock(vector<byte> blockArray, int keySize){
     int n = blockArray.size()/keySize;
     if(blockArray.size() % keySize != 0)
         n++;
@@ -168,7 +168,7 @@ vector< vector<byte> > Analysis::groupBlock(vector<byte> blockArray, int keySize
     return groupedBlock;
 }
 
-bool Analysis::is_ECB(const vector<byte>& data){
+bool is_ECB(const vector<byte>& data){
     
     int n = (int) data.size()/16;
     if(data.size() % 16 != 0)
@@ -182,14 +182,14 @@ bool Analysis::is_ECB(const vector<byte>& data){
     bool found = false;
     for(int i = 0; (i < blockData.size()) and (not found); ++i){
         for(int j = i + 1; (j < blockData.size()) and (not found); ++j){
-            if (Block::compareBlocks(blockData[i], blockData[j]))
+            if (compareBlocks(blockData[i], blockData[j]))
                 found = true;
         }
     }
     return found;
 }
 
-bool Analysis::mode_detector(vector<byte> (*f)(const vector<byte>&)){
+bool mode_detector(vector<byte> (*f)(const vector<byte>&)){
     vector<byte> v (16*3, 65);
     v = f(v);
     bool out;

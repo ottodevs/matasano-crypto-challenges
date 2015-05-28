@@ -9,31 +9,25 @@
 #include <fstream>
 
 
-class Block {
-    /*
-     * Tools for working with blocks and block crypto
-     */
+/*
+ * Tools for working with blocks and block crypto
+ */
 
-private:
+extern void find_ECB_line(string filename); //Searches for an ECB encrypted line with function is_ECB and prints repeating strings
 
-public:
+extern bool compareBlocks(const vector<byte>& block1, const vector<byte>& block2); //returns true for equal blocks
 
-    static void find_ECB_line(string filename); //Searches for an ECB encrypted line with function is_ECB and prints repeating strings
+extern bool compareBlocks(byte *block1, byte *block2, int size);
 
-    static bool compareBlocks(const vector<byte>& block1, const vector<byte>& block2); //returns true for equal blocks
+extern vector<byte> gen_random_block(); //returns a random 128-bit block
 
-    static bool compareBlocks(byte *block1, byte *block2, int size);
-
-    static vector<byte> gen_random_block(); //returns a random 128-bit block
-
-    static vector<byte> gen_random_bytes(int n);
+extern vector<byte> gen_random_bytes(int n);
     /* returns n random bytes. if n < 0 randomizes n between 0 and 15 */
 
-    static void shiftBytes(vector<byte>& v, byte last); //shifts left and assigns last
+extern void shiftBytes(vector<byte>& v, byte last); //shifts left and assigns last
 
-    static vector<byte> copyFrom(byte *in, int size);
+extern vector<byte> copyFrom(byte *in, int size);
 
-    static vector<byte> append_arrays(const vector<byte>& array1, const vector<byte>& array2);
+extern vector<byte> append_arrays(const vector<byte>& array1, const vector<byte>& array2);
 
-};
 #endif

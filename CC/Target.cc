@@ -2,15 +2,15 @@
 
 
 Target::Target(){
-    secretKey = Block::gen_random_block();
+    secretKey = gen_random_block();
 }
 
 Target::~Target(){}
 
 vector<byte> Target::rand_encryption(const vector<byte>& data){
     vector<byte> iv,key;
-    iv = Block::gen_random_block();
-    key = Block::gen_random_block();
+    iv = gen_random_block();
+    key = gen_random_block();
     time_t secs;
     time(&secs);
     srand((unsigned int) secs);
@@ -28,10 +28,10 @@ vector<byte> Target::rand_encryption(const vector<byte>& data){
     out = pkcs7_pad(out, data.size() + n);
 
     if(rand() % 2 == 0){
-        out = Aes::aes_128_ECB_en(out, &key[0]);
+        out = aes_128_ECB_en(out, &key[0]);
         //cout << "ECB" << endl;
     }else{
-        out = Aes::aes_128_CBC_en(out, &key[0], iv);
+        out = aes_128_CBC_en(out, &key[0], iv);
         //cout << "CBC" << endl;
     }
     return out;
@@ -39,27 +39,27 @@ vector<byte> Target::rand_encryption(const vector<byte>& data){
 
 vector<byte> Target::append_and_encrypt(const vector<byte>& data){
     vector<byte> append;
-    append = Conversion::b64StringToByteArray(b64append);
-    vector<byte> data2 = Block::append_arrays(data, append);
-    return (Aes::aes_128_ECB_en(data2, &globKey[0]));
+    append = b64StringToByteArray(b64append);
+    vector<byte> data2 = append_arrays(data, append);
+    return (aes_128_ECB_en(data2, &globKey[0]));
 }
 
 vector<byte> Target::prepend_and_encrypt(const vector<byte>& data){
-    vector<byte> append = Conversion::b64StringToByteArray(b64append);
+    vector<byte> append = b64StringToByteArray(b64append);
     //vector<byte> prepend = Block::gen_random_bytes(-1);
 
-    vector<byte> data2 = Block::append_arrays(data, append);
-    data2 = Block::append_arrays(prepend, data2);
-    return (Aes::aes_128_ECB_en(data2, &globKey[0]));
+    vector<byte> data2 = append_arrays(data, append);
+    data2 = append_arrays(prepend, data2);
+    return (aes_128_ECB_en(data2, &globKey[0]));
 }
 
 vector<byte> Target::encrypt_CBC(vector<byte>& data){
-    return Aes::aes_128_CBC_en(data, &secretKey[0], globKey);
+    return aes_128_CBC_en(data, &secretKey[0], globKey);
 }
 
 bool Target::padding_oracle(const vector<byte>& v, vector<byte>& iv){
     vector<byte> plain = v;
-    plain = Aes::aes_128_CBC_de_NP(plain, &secretKey[0], iv);
+    plain = aes_128_CBC_de_NP(plain, &secretKey[0], iv);
     bool ret = remove_padding(plain);
     return ret;
 }

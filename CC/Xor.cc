@@ -1,7 +1,7 @@
 #include "Xor.hh"
 
 
-vector<byte> Xor::fixed_xor(const vector<byte>& data1, const vector<byte>& data2){
+vector<byte> fixed_xor(const vector<byte>& data1, const vector<byte>& data2){
     if(data1.size() != data2.size()){
         cout << "operands are not the same size" << endl;
         return vector<byte>();
@@ -13,7 +13,7 @@ vector<byte> Xor::fixed_xor(const vector<byte>& data1, const vector<byte>& data2
     return out;
 }
 
-vector<byte> Xor::single_key_xor(const vector<byte>& buffer1, byte k){
+vector<byte> single_key_xor(const vector<byte>& buffer1, byte k){
     vector<byte> out (buffer1.size(), 0);
     for (int i = 0; i < buffer1.size(); ++i){
         out[i] = buffer1[i] xor k;
@@ -21,10 +21,10 @@ vector<byte> Xor::single_key_xor(const vector<byte>& buffer1, byte k){
     return out;
 }
 
-vector<byte> Xor::repeating_key_xor(const vector<byte>& in, string key){
+vector<byte> repeating_key_xor(const vector<byte>& in, string key){
     vector<byte> out (in.size());
     vector<byte> k;
-    k = Conversion::stringToByteArray(key);
+    k = stringToByteArray(key);
     int p = 0;
     for(int i = 0; i < in.size(); ++i){
         out[i] = in[i] xor k[p];
@@ -35,7 +35,7 @@ vector<byte> Xor::repeating_key_xor(const vector<byte>& in, string key){
     return out;
 }
 
-vector<byte> Xor::repeating_key_xor(const vector<byte>& in, vector<byte>& key){
+vector<byte> repeating_key_xor(const vector<byte>& in, vector<byte>& key){
     vector<byte> out (in.size());
     int p = 0;
     for(int i = 0; i < in.size(); ++i){
@@ -48,7 +48,7 @@ vector<byte> Xor::repeating_key_xor(const vector<byte>& in, vector<byte>& key){
 }
 
 
-vector<byte> Xor::block_xor(byte *v, byte *b){
+vector<byte> block_xor(byte *v, byte *b){
     vector<byte> x (16);
     vector<byte> y (16);
     for(int i = 0; i < 16; ++i){

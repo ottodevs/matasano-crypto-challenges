@@ -7,7 +7,7 @@ OUT_EXE=crypto.x
 MAIN=set3.cc
 
 build: $(CC) $(MAIN)
-	$(Cpp) -lssl -lcrypto -c $(CC) $(MAIN) -I$(HH)
+	$(Cpp) -lssl -lcrypto -pthread -I$(HH) $(CC) -c $(MAIN)
 	$(Cpp) -lssl -lcrypto -o $(OUT_EXE) $(OBJECTS)
 
 set1.x: $(CC) set1.cc

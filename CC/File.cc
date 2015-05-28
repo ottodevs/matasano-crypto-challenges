@@ -1,7 +1,7 @@
 #include "File.hh"
 
 
-void File::searchOnFile(const string filename, int thres){
+void searchOnFile(const string filename, int thres){
     vector<byte> v;
     ifstream cypherfile;
     cypherfile.open(&filename[0]);
@@ -9,8 +9,8 @@ void File::searchOnFile(const string filename, int thres){
     if (cypherfile.is_open()){
         int count = 1;
         while(getline (cypherfile,line)){
-            v = Conversion::hexToByteArray(line);
-            if(Attack::testBytes(v, thres))
+            v = hexToByteArray(line);
+            if(testBytes(v, thres))
                 cout << "line " << count << endl;
             count++;
         }
@@ -21,7 +21,7 @@ void File::searchOnFile(const string filename, int thres){
     cypherfile.close();
 }
 
-vector<byte> File::fetchFromFile(const string filename){
+vector<byte> fetchFromFile(const string filename){
     ifstream file;
     file.open(&filename[0]);
     string line;
@@ -39,14 +39,14 @@ vector<byte> File::fetchFromFile(const string filename){
     //put string into byte array (B64)
     vector<byte> blockArray (block.size());
     for(int i = 0; i < block.size(); ++i){
-        blockArray[i] = Conversion::charToB64(block[i]);
+        blockArray[i] = charToB64(block[i]);
     }
 
     //B64 -> Array
-    return Conversion::b64ToByteArray(blockArray);
+    return b64ToByteArray(blockArray);
 }
 
-vector<string> File::getStrings(const string filename){
+vector<string> getStrings(const string filename){
     ifstream file;
     file.open(&filename[0]);
     string line;

@@ -11,16 +11,16 @@
 
 //Convert hex to base64
 void ch1(){
-    vector<byte> v = Conversion::hexToByteArray(ch1_str); //string ch1_str located at utils.cpp
-    v = Conversion::byteArrayToB64(v);
-    Output::printB64(v);
+    vector<byte> v = hexToByteArray(ch1_str); //string ch1_str located at utils.cpp
+    v = byteArrayToB64(v);
+    printB64(v);
 }
 
 //Fixed XOR
 void ch2(){
-    vector<byte> v1 = Conversion::hexToByteArray(ch2_str1);
-    vector<byte> v2 = Conversion::hexToByteArray(ch2_str2);
-    Output::printHex(Xor::fixed_xor(v1,v2));
+    vector<byte> v1 = hexToByteArray(ch2_str1);
+    vector<byte> v2 = hexToByteArray(ch2_str2);
+    printHex(fixed_xor(v1,v2));
 }
 
 //Single-byte XOR cipher
@@ -28,8 +28,8 @@ void ch2(){
  * SOL: Cooking MC's like a pound of bacon (key:88)
  */
 void ch3(){
-    vector<byte> cipher = Conversion::hexToByteArray(ch3_str);
-    Attack::testBytes(cipher, THRES); //THRES is a constant defined in utils.cpp
+    vector<byte> cipher = hexToByteArray(ch3_str);
+    testBytes(cipher, THRES); //THRES is a constant defined in utils.cpp
 }
 
 //Detect single-character XOR
@@ -37,14 +37,14 @@ void ch3(){
  * SOL: In line 171 with key 53 "Now that the party is jumping"
  */
 void ch4(){
-    File::searchOnFile("INPUT/ch4.txt", THRES);
+    searchOnFile("INPUT/ch4.txt", THRES);
 }
 
 //Implement repeating-key XOR
 void ch5(){
-    vector<byte> v = Conversion::stringToByteArray(ch5_str);
-    v = Xor::repeating_key_xor(v, "ICE");
-    Output::printHex(v);
+    vector<byte> v = stringToByteArray(ch5_str);
+    v = repeating_key_xor(v, "ICE");
+    printHex(v);
 }
 
 //Break repeating-key XOR
@@ -54,14 +54,14 @@ void ch5(){
  * decrypts to the lyrics for "Play That Funky Music"
  */
 void ch6(){
-    vector<byte> cipher = File::fetchFromFile("INPUT/ch6.txt");
-    int ks = Analysis::find_key_size(cipher, 2, 40);
+    vector<byte> cipher = fetchFromFile("INPUT/ch6.txt");
+    int ks = find_key_size(cipher, 2, 40);
     cout << ">Best Keysize: " << ks << endl;
     cout << "-------------------------" << endl << endl;
-    vector<byte> keyV = Attack::findRepeatingKey(Analysis::groupBlock(cipher,ks));
+    vector<byte> keyV = findRepeatingKey(groupBlock(cipher,ks));
     
     cout << "detected key: ";
-    Output::printChar(keyV);
+    printChar(keyV);
     cout << endl << "Change? (y/n)";
     char ans;
     cin >> ans;
@@ -78,8 +78,8 @@ void ch6(){
         key = string(keyV.begin(), keyV.end());
     }
     cout << endl << "-------------------------" << endl;
-    vector<byte> plain = Xor::repeating_key_xor(cipher, key);
-    Output::printChar(plain);
+    vector<byte> plain = repeating_key_xor(cipher, key);
+    printChar(plain);
     cout << endl;
 }
 
@@ -88,9 +88,9 @@ void ch6(){
  * SOL: decrypts to same lyrics as challege 6
  */
 void ch7(){
-    vector<byte> v = File::fetchFromFile("INPUT/ch7.txt");
-    v = Aes::aes_128_ECB_de(v, keySub);
-    Output::printChar(v);
+    vector<byte> v = fetchFromFile("INPUT/ch7.txt");
+    v = aes_128_ECB_de(v, keySub);
+    printChar(v);
     cout << endl;
 }
 
@@ -99,7 +99,7 @@ void ch7(){
  * line 133 is probably encrypted with ECB (repeating Block found)
  */
 void ch8(){
-    Block::find_ECB_line("INPUT/ch8.txt");
+    find_ECB_line("INPUT/ch8.txt");
 }
 
 /*

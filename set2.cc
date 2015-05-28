@@ -23,16 +23,16 @@ void ch9(){
  * SOL: same lyrics as in set 1. Somebody really likes this song
  */
 void ch10(){
-    vector<byte> v = File::fetchFromFile("INPUT/ch10.txt");
+    vector<byte> v = fetchFromFile("INPUT/ch10.txt");
     vector<byte> iv(16, 0);
-    v = Aes::aes_128_CBC_de(v, keySub, iv);
-    Output::printChar(v);
+    v = aes_128_CBC_de(v, keySub, iv);
+    printChar(v);
     cout << endl;
 }
 
 //An ECB/CBC detection oracle
 void ch11(){
-    Analysis::mode_detector(Target::rand_encryption);
+    mode_detector(Target::rand_encryption);
 }
 
 //Byte-at-a-time ECB decryption(Simple)
@@ -40,14 +40,14 @@ void ch11(){
  * SOL: more pop lyrics, but different this time
  */
 void ch12(){
-    Target::globKey = Block::gen_random_block();
-    Attack::byte_at_a_time(Target::append_and_encrypt);
+    Target::globKey = gen_random_block();
+    byte_at_a_time(Target::append_and_encrypt);
 }
 
 //ECB cut-and-paste
 void ch13(){
 
-    vector<byte> admin_str = Conversion::stringToByteArray("XXXXXXXXXXadmin");
+    vector<byte> admin_str = stringToByteArray("XXXXXXXXXXadmin");
     admin_str = pkcs7_pad(admin_str, 16 + 10);
     string mail(admin_str.begin(), admin_str.end());
     mail += "XXXX";
@@ -66,28 +66,28 @@ void ch13(){
 
     mike.update(cipher);
     string ss = mike.getString();
-    vector<byte> v = Conversion::stringToByteArray(ss);
-    Output::printChar(v);
+    vector<byte> v = stringToByteArray(ss);
+    printChar(v);
     cout << endl;
 }
 
 //Byte-at-a-time ECB decryption(Harder)
 void ch14(){
-    Target::globKey = Block::gen_random_block();
-    Target::prepend = Block::gen_random_bytes(-1);
-    Attack::byte_at_a_time(Target::prepend_and_encrypt);
+    Target::globKey = gen_random_block();
+    Target::prepend = gen_random_bytes(-1);
+    byte_at_a_time(Target::prepend_and_encrypt);
 }
 
 //PKCS#7 padding validation
 void ch15(){
-    vector<byte> v = Conversion::stringToByteArray(ch15_str);
+    vector<byte> v = stringToByteArray(ch15_str);
     v = pkcs7_pad(v, 16);
-    Output::printChar(v);
+    printChar(v);
     if(remove_padding(v)) cout << endl << "padding removed" << endl;
     else cout << endl << "incorrect padding" << endl;
     vector<byte> b (4,5);
-    v = Block::append_arrays(v, b);
-    Output::printChar(v);
+    v = append_arrays(v, b);
+    printChar(v);
     if(remove_padding(v)) cout << endl << "padding removed" << endl;
     else cout << endl << "incorrect padding" << endl;
 }
@@ -103,7 +103,7 @@ void ch16(){
     mask[16] = 1;
     mask[16 + 6] = 1;
     mask[16 + 11] = 1;
-    v = Xor::fixed_xor(v, mask);
+    v = fixed_xor(v, mask);
 
     if(User::searchString(v)) cout << "admin" << endl;
     else cout << "not admin" << endl;

@@ -1,10 +1,12 @@
 #include "User.hh"
 
+vector<byte> User::globKey(16, 0);
+int User::id_gen = 0;
 
 User::User(string email){
 
     if(id_gen == 0){
-        globKey = Block::gen_random_block();
+        globKey = gen_random_block();
         id_gen++;
     }
     
@@ -24,10 +26,10 @@ User::User(string email){
 
 User::User(const vector<byte>& cipher){
     if(id_gen == 0){
-        globKey = Block::gen_random_block();
+        globKey = gen_random_block();
         id_gen++;
     }
-    vector<byte> v = Aes::aes_128_ECB_de(cipher, &globKey[0]);
+    vector<byte> v = aes_128_ECB_de(cipher, &globKey[0]);
     string str(v.begin(), v.end());
     properties = parse(str);
 }
@@ -35,7 +37,7 @@ User::User(const vector<byte>& cipher){
 User::~User(){}
 
 void User::update(const vector<byte>& cipher){
-    vector<byte> v = Aes::aes_128_ECB_de(cipher, &globKey[0]);
+    vector<byte> v = aes_128_ECB_de(cipher, &User::globKey[0]);
     string str(v.begin(), v.end());
     properties = parse(str);
  
@@ -90,29 +92,29 @@ string User::getString(){
 
 vector<byte> User::getEncryptedProfile(){
     string str = getString();
-    vector<byte> v = Conversion::stringToByteArray(str);
-    return Aes::aes_128_ECB_en(v, &globKey[0]);
+    vector<byte> v = stringToByteArray(str);
+    return aes_128_ECB_en(v, &User::globKey[0]);
 }
 
 vector<byte> User::encryptData(const string& in){
 
-    vector<byte> v = Conversion::stringToByteArray(in);
+    vector<byte> v = stringToByteArray(in);
 
     for(int i = 0; i < in.size(); ++i){
         if(in[i] == ';' or in[i] == '=') v[i] = (byte)'*';
     }
 
-    vector<byte> append = Conversion::stringToByteArray(app);
-    vector<byte> prepend = Conversion::stringToByteArray(pre);
+    vector<byte> append = stringToByteArray(app);
+    vector<byte> prepend = stringToByteArray(pre);
 
-    vector<byte> data = Block::append_arrays(v, append);
-    data = Block::append_arrays(prepend, data);
-    return (Aes::aes_128_CBC_en(data, &globKey[0], globKey));
+    vector<byte> data = append_arrays(v, append);
+    data = append_arrays(prepend, data);
+    return (aes_128_CBC_en(data, &User::globKey[0], globKey));
  
 }
 
 bool User::searchString(vector<byte> v){
-    vector<byte> b = Aes::aes_128_CBC_de(v, &globKey[0], globKey);
+    vector<byte> b = aes_128_CBC_de(v, &globKey[0], globKey);
 
     string str (b.begin(), b.end());
     size_t found = str.find(";admin=true;");
@@ -124,7 +126,4 @@ int User::getUid(){
     stringstream(properties["uid"]) >> out;
     return out;
 }
-
-vector<byte> User::globKey(16, 0);
-int User::id_gen = 0;
 

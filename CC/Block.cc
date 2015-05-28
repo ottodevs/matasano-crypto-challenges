@@ -1,7 +1,7 @@
 #include "Block.hh"
 
 
-void Block::find_ECB_line(string filename){
+void find_ECB_line(string filename){
     vector<byte> v;
     ifstream file;
     file.open(&filename[0]);
@@ -9,8 +9,8 @@ void Block::find_ECB_line(string filename){
     if(file.is_open()){
         int lineNum = 1;
         while(getline(file,line)){
-            v = Conversion::hexToByteArray(line);
-            if(Analysis::is_ECB(v)){
+            v = hexToByteArray(line);
+            if(is_ECB(v)){
                 cout << "Repeating block found at line " << lineNum << ":" << endl;
                 cout << line << endl << endl; 
             }
@@ -21,7 +21,7 @@ void Block::find_ECB_line(string filename){
     }
 }
 
-bool Block::compareBlocks(const vector<byte>& block1, const vector<byte>& block2){
+bool compareBlocks(const vector<byte>& block1, const vector<byte>& block2){
     bool equal = true;
     for(int i = 0; (i < block1.size()) and equal; ++i){
         if(block1[i] != block2[i])
@@ -35,7 +35,7 @@ bool Block::compareBlocks(const vector<byte>& block1, const vector<byte>& block2
     return equal;
 }
 
-bool Block::compareBlocks(byte *block1, byte *block2, int size){
+bool compareBlocks(byte *block1, byte *block2, int size){
     bool equal = true;
     for(int i = 0; i < size and equal; ++i){
         if (*block1 != *block2)
@@ -46,7 +46,7 @@ bool Block::compareBlocks(byte *block1, byte *block2, int size){
     return equal;
 }
 
-vector<byte> Block::gen_random_block(){
+vector<byte> gen_random_block(){
     time_t secs;
     time(&secs);
     srand((unsigned int) secs);
@@ -57,7 +57,7 @@ vector<byte> Block::gen_random_block(){
     return out;
 }
 
-vector<byte> Block::gen_random_bytes(int n){
+vector<byte> gen_random_bytes(int n){
     time_t secs;
     time(&secs);
     srand((unsigned int) secs);
@@ -73,14 +73,14 @@ vector<byte> Block::gen_random_bytes(int n){
     return out;
 }
 
-void Block::shiftBytes(vector<byte>& v, byte last){
+void shiftBytes(vector<byte>& v, byte last){
     for(int i = 0; i < v.size() - 1; ++i){
         v[i] = v[i + 1];
     }
     v[v.size() - 1] = last;
 }
 
-vector<byte> Block::copyFrom(byte *in, int size){
+vector<byte> copyFrom(byte *in, int size){
     vector<byte> out (size);
     for(int i = 0; i < size; ++i){
         out[i] = *in;
@@ -89,7 +89,7 @@ vector<byte> Block::copyFrom(byte *in, int size){
     return out;
 }
 
-vector<byte> Block::append_arrays(const vector<byte>& array1, const vector<byte>& array2){
+vector<byte> append_arrays(const vector<byte>& array1, const vector<byte>& array2){
     vector<byte> out (array1.size() + array2.size());
     for(int i = 0; i < array1.size(); ++i){
         out[i] = array1[i];

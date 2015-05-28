@@ -1,6 +1,6 @@
 #include "Conversion.hh"
 
-int Conversion::hexToDec(char hex){
+int hexToDec(char hex){
 	if ('0' <= hex && hex <= '9') {
         return hex - '0';
     }
@@ -12,7 +12,7 @@ int Conversion::hexToDec(char hex){
     return hex - 'a' + 10;
 }
 
-byte Conversion::charToB64(char c){
+byte charToB64(char c){
     for(int i = 0; i < 64; ++i){
         if (table_64[i] == c)
             return (byte) i;
@@ -20,7 +20,7 @@ byte Conversion::charToB64(char c){
     return 63;
 }
 
-vector<byte> Conversion::hexToByteArray(const string& hex){
+vector<byte> hexToByteArray(const string& hex){
 	vector<byte> v (hex.size() / 2);
 	for(int i = 0; i < hex.size(); i += 2){
 		v[i/2] = hexToDec(hex[i])*16 + hexToDec(hex[i+1]);
@@ -28,7 +28,7 @@ vector<byte> Conversion::hexToByteArray(const string& hex){
 	return v;
 }
 
-vector<byte> Conversion::byteArrayToB64(const vector<byte>& v){
+vector<byte> byteArrayToB64(const vector<byte>& v){
     int n = (int) v.size()/3 * 4;
     if (v.size()%3 == 1)
         n += 2;
@@ -68,7 +68,7 @@ vector<byte> Conversion::byteArrayToB64(const vector<byte>& v){
     return B64;
 }
 
-vector<byte> Conversion::b64ToByteArray(const vector<byte>& v){
+vector<byte> b64ToByteArray(const vector<byte>& v){
     int n = (int) v.size()/4 * 3;
     if (v.size()%4 == 1)
         n ++;
@@ -111,7 +111,7 @@ vector<byte> Conversion::b64ToByteArray(const vector<byte>& v){
     return out;
 }
 
-vector<byte> Conversion::stringToByteArray(const string& str){
+vector<byte> stringToByteArray(const string& str){
     vector<byte> out (str.size());
     for (int i = 0; i < str.size(); ++i){
         out[i] = str[i];
@@ -119,7 +119,7 @@ vector<byte> Conversion::stringToByteArray(const string& str){
     return out;
 }
 
-vector<byte> Conversion::intToByteArray(const unsigned long int &num, bool invert){
+vector<byte> intToByteArray(const unsigned long int &num, bool invert){
     byte *p = (byte*)&num;
     vector<byte> out (sizeof(unsigned long int));
     for(int i = 1; i <= sizeof(unsigned long int); ++i){
@@ -132,7 +132,7 @@ vector<byte> Conversion::intToByteArray(const unsigned long int &num, bool inver
     return out;
 }
 
-vector<byte> Conversion::b64StringToByteArray(const string& str){
+vector<byte> b64StringToByteArray(const string& str){
     vector<byte> out = stringToByteArray(str);
     for(int i = 0; i < out.size(); ++i)
         out[i] = charToB64(out[i]);

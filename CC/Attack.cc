@@ -20,7 +20,7 @@ byte testBytes(const vector<byte> v, int thres){
             cout <<"']" << endl;
         }
     }
-    cout << "best: " << (int)key << endl;
+    if(best > thres) cout << "best: " << (int)key << endl;
     return key;
 }
 

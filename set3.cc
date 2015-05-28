@@ -195,15 +195,70 @@ void ch23(){
 void ch24(){
     string message = "AAAAAAAAAAAAAA";
     vector<byte> v = stringToByteArray(message);
-    v = mt19937(v, 98764);
-    v = mt19937(v, 98764);
-    printChar(v);
-    cout << endl;
+    vector<byte> p = gen_random_bytes(-1);
+    v = append_arrays(p, v);
+    v = mt19937(v, 33212);
+    int key;
+    bool found = false;
+    for(key = 0; key < 65536 and not found; ++key){
+        p = mt19937(v, key);
+        bool dec = true;
+        for(int j = v.size()-1; j >= v.size()-14 and dec; --j){
+            if(p[j] != 'A') dec = false;
+        }
+        found = dec;
+    }
+    key--;
+    if(found){
+        cout << "key: " << key << endl;
+        printChar(p);
+        cout << endl;
+    }
+    else cout << "not found" << endl;
+    cout << endl << "-----------------------" << endl << endl;
+
+    time_t now = time(0);
+    rng gen(now);
+    unsigned int n1 = gen.extract_number();
+    gen.seed(234321);
+    unsigned int n2 = gen.extract_number();
+
+    if(is_time_seeded(n1, 500)) cout << "is time seeded" << endl;
+    else cout << "not timeseeded" << endl;
+    if(is_time_seeded(n2, 500)) cout << "is time seeded" << endl;
+    else cout << "not timeseeded" << endl;
 }
 
 /*
  * MAIN
  */
 int main(){
-    ch24();
+    int ch;
+    cin >> ch;
+    switch(ch){
+        case 17:
+            ch17();
+            break;
+        case 18:
+            ch18();
+            break;
+        case 19:
+            ch19();
+            break;
+        case 20:
+            ch20();
+            break;
+        case 21:
+            ch21();
+            break;
+        case 22:
+            ch22();
+            break;
+        case 23:
+            ch23();
+            break;
+        case 24:
+            ch24();
+            break;
+    } 
 }

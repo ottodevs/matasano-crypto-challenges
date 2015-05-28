@@ -1,15 +1,12 @@
 #include "RNG.hh"
 
+rng::rng(){
+    index = 0;
+}
+
 rng::rng(int seed){
     index = 0;
-
-    MT[0] = seed;
-    for(int i = 1; i < 624; ++i){
-        unsigned long int a = 1812433253;
-        a = a * (MT[i-1] xor (MT[i-1] >> 30)) + i;
-        a = (a << 32) >> 32;
-        MT[i] = a;
-    }
+    this->seed(seed);
 }
 
 rng::rng(unsigned int* s){
@@ -17,6 +14,17 @@ rng::rng(unsigned int* s){
     
     for(int i = 0; i < 624; ++i, ++s)
         MT[i] = *s;
+}
+
+void rng::seed(int seed){
+    MT[0] = seed;
+    for(int i = 1; i < 624; ++i){
+        unsigned long int a = 1812433253;
+        a = a * (MT[i-1] xor (MT[i-1] >> 30)) + i;
+        a = (a << 32) >> 32;
+        MT[i] = a;
+    }
+    index = 0;
 }
 
 unsigned int rng::extract_number(){

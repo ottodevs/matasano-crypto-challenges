@@ -12,9 +12,9 @@
 //Implement PKCS#7 padding
 void ch9(){
     string ys = "YELLOW SUBMARINE";
-    vector<byte> v = Conversion::stringToByteArray(ys);
+    vector<byte> v = stringToByteArray(ys);
     v = pkcs7_pad(v, 20);
-    Output::printChar(v);
+    printChar(v);
     cout << endl;
 }
 

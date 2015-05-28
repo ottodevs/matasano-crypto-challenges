@@ -190,11 +190,14 @@ unsigned int mt19937_untemper(unsigned int n){
     return y;
 }
 
-unsigned int mt19937_temper(unsigned int n){
-    unsigned long int y = n;
-    y = y xor (y >> 11);
-    y = y xor ((y << 7) bitand (0x9d2c5680));
-    y = y xor ((y << 15) bitand (0xefc60000));
-    y = y xor (y >> 18);
-    return y; 
+bool is_time_seeded(unsigned int n, int threshold){
+    rng gen;
+    time_t now = time(0);
+    bool found = false;
+    for(int s = now; s >= now-threshold and not found; --s){
+        gen.seed(s);
+        if(gen.extract_number() == n)
+            found = true;
+    }
+    return found;
 }

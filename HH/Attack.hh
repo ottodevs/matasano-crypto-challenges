@@ -7,6 +7,8 @@
 #include "Output.hh"
 #include "Xor.hh"
 #include "Target.hh"
+#include "RNG.hh"
+#include <ctime>
 
 
 /*
@@ -30,6 +32,6 @@ extern vector<byte> padding_oracle_attack(const vector<byte>& c, const vector<by
 
 extern unsigned int mt19937_untemper(unsigned int n);
 
-extern unsigned int mt19937_temper(unsigned int n);
+extern bool is_time_seeded(unsigned int n, int threshold);
 
 #endif

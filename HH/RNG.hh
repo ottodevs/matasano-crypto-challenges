@@ -13,11 +13,15 @@ private:
 
 public:
 
+    rng();
+
     //create rng from seed
     rng(int seed);
 
     //create rng from state
     rng(unsigned int* s);
+
+    void seed(int seed);
 
     unsigned int extract_number();
 

@@ -4,7 +4,7 @@ CC=./CC/*.cc
 HH=./HH
 OBJECTS=*.o
 OUT_EXE=crypto.x
-MAIN=set3.cc
+MAIN=set4.cc
 
 build: $(CC) $(MAIN)
 	$(Cpp) -lssl -lcrypto -I$(HH) $(CC) -c $(MAIN)

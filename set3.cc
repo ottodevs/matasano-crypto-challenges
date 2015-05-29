@@ -136,6 +136,7 @@ void ch20(){
     }
 }
 
+//Implement the MT19937 Mersenne Twister RNG
 void ch21(){
     cout << "introduce seed to generate random numbers: ";
     int seed;
@@ -146,6 +147,7 @@ void ch21(){
         cout << mt.extract_number() << endl;
 }
 
+//Crack an MT19937 seed
 void ch22(){
     time_t secs;
     time(&secs);
@@ -175,7 +177,7 @@ void ch22(){
     }
 }
 
-
+//Clone an MT19937 RNG from its output
 void ch23(){
     rng rand(453256);
     unsigned int state[624];
@@ -192,6 +194,7 @@ void ch23(){
         cout << clone.extract_number() << endl;
 }
 
+//Create the MT19937 stream cipher and break it
 void ch24(){
     string message = "AAAAAAAAAAAAAA";
     vector<byte> v = stringToByteArray(message);

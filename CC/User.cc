@@ -113,13 +113,41 @@ vector<byte> User::encryptData(const string& in){
  
 }
 
+vector<byte> User::encryptData_CTR(const string& in){
+ 
+    vector<byte> v = stringToByteArray(in);
+
+    vector<byte> nonce = intToByteArray(12530, false);
+    for(int i = 0; i < in.size(); ++i){
+        if(in[i] == ';' or in[i] == '=') v[i] = (byte)'*';
+    }
+
+    vector<byte> append = stringToByteArray(app);
+    vector<byte> prepend = stringToByteArray(pre);
+
+    vector<byte> data = append_arrays(v, append);
+    data = append_arrays(prepend, data);
+    return (aes_128_CTR(data, &User::globKey[0], nonce));
+ 
+}
+
 bool User::searchString(vector<byte> v){
-    vector<byte> b = aes_128_CBC_de(v, &globKey[0], globKey);
+    vector<byte> b = aes_128_CBC_de(v, &User::globKey[0], globKey);
 
     string str (b.begin(), b.end());
     size_t found = str.find(";admin=true;");
     return (found!=string::npos);
 }
+
+bool User::searchString_CTR(vector<byte> v){
+    vector<byte> nonce = intToByteArray(12530, false);
+    vector<byte> b = aes_128_CTR(v, &User::globKey[0], nonce);
+
+    string str (b.begin(), b.end());
+    size_t found = str.find(";admin=true;");
+    return (found!=string::npos);
+}
+
 
 int User::getUid(){
     int out;

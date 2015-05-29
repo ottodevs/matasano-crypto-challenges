@@ -35,7 +35,10 @@ public:
 
     static vector<byte> encryptData(const string& in);
 
+    static vector<byte> encryptData_CTR(const string& in);
+
     static bool searchString(vector<byte> v); //unencrypts and searches for string ";admin=true;"
+    static bool searchString_CTR(vector<byte> v);
 
     int getUid();
 

@@ -3,6 +3,7 @@
 #include "Aes.hh"
 #include "Stream.hh"
 #include "Conversion.hh"
+#include "User.hh"
 
 void ch25(){
     vector<byte> v = fetchFromFile("INPUT/ch7.txt");
@@ -29,7 +30,22 @@ void ch25(){
     cout << endl;
 }
 
+void ch26(){
+    //pretty much the same as with ch6
+    string obj = ":admin<true:";
+
+    vector<byte> v = User::encryptData_CTR(obj);
+
+    vector<byte> mask (v.size(), 0);
+    mask[32] = 1;
+    mask[32 + 6] = 1;
+    mask[32 + 11] = 1;
+    v = fixed_xor(v, mask);
+
+    if(User::searchString_CTR(v)) cout << "admin" << endl;
+    else cout << "not admin" << endl;
+}
 
 int main(){
-    ch25();
+    ch26();
 }

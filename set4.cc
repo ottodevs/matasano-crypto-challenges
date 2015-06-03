@@ -4,6 +4,7 @@
 #include "Stream.hh"
 #include "Conversion.hh"
 #include "User.hh"
+#include "Hash.hh"
 
 void ch25(){
     vector<byte> v = fetchFromFile("INPUT/ch7.txt");
@@ -65,6 +66,15 @@ void ch27(){
     }
 }
 
+void ch28(){
+    string message = "this is the message, I try to make it long for test purposes, but it could be short too";
+    string key = "THIS-IS-KEY";
+    vector<byte> m = stringToByteArray(message);
+    vector<byte> k = stringToByteArray(key);
+    vector<byte> mac = sha1_mac(k, m);
+    printHex(mac);
+}
+
 int main(){
-    ch27();
+    ch28();
 }

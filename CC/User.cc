@@ -1,6 +1,6 @@
 #include "User.hh"
 
-vector<byte> User::globKey(16, 0);
+vector<byte> User::globKey = gen_random_block();
 int User::id_gen = 0;
 
 User::User(string email){
@@ -148,6 +148,15 @@ bool User::searchString_CTR(vector<byte> v){
     return (found!=string::npos);
 }
 
+vector<byte> User::check_ascii(vector<byte>& v){
+    vector<byte> b = aes_128_CBC_de(v, &User::globKey[0], globKey);
+    bool high_ascii = false;
+    for(int i = 0; i < b.size(); ++i){
+        if(b[i] > 127) high_ascii = true;
+    }
+    if(high_ascii) return b;
+    else return vector<byte>();
+}
 
 int User::getUid(){
     int out;

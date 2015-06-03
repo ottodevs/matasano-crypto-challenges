@@ -5,6 +5,7 @@
 #include "Aes.hh"
 #include "Conversion.hh"
 #include "Block.hh"
+#include "Output.hh"
 #include <sstream>
 
 class User {
@@ -39,6 +40,9 @@ public:
 
     static bool searchString(vector<byte> v); //unencrypts and searches for string ";admin=true;"
     static bool searchString_CTR(vector<byte> v);
+    
+    //returns decrypted vector if high ascii is found, else returns an empty vector
+    static vector<byte> check_ascii(vector<byte>& v);
 
     int getUid();
 

@@ -31,7 +31,6 @@ void ch25(){
 }
 
 void ch26(){
-    //pretty much the same as with ch6
     string obj = ":admin<true:";
 
     vector<byte> v = User::encryptData_CTR(obj);
@@ -46,6 +45,26 @@ void ch26(){
     else cout << "not admin" << endl;
 }
 
+void ch27(){
+    //encrypt url string with User (3 blocks)
+    string s = "www.aaaaaaaaaaaa.aaaaaaaaaaaaaaa.aaaaaaaaaaa.com";
+    vector<byte> v = User::encryptData(s);
+    //modify the message C1, 0, C1
+    for(int i = 16; i < 32; ++i){
+        v[i] = 0;
+        v[i + 16] = v[i - 16];
+    }
+    //key: P1' xor P3'
+    v = User::check_ascii(v);
+    if(v.empty())
+        cout << "good ascii" << endl;
+    else{
+        vector<byte> k = block_xor(&v[0], &v[32]);
+        cout << "key found: ";
+        printHex(k);
+    }
+}
+
 int main(){
-    ch26();
+    ch27();
 }

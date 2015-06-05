@@ -67,14 +67,22 @@ void ch27(){
 }
 
 void ch28(){
-    string message = "this is the message, I try to make it long for test purposes, but it could be short too";
-    string key = "THIS-IS-KEY";
+    string message = " brown fox jumps over the lazy dog";
+    string key = "The quick";
     vector<byte> m = stringToByteArray(message);
     vector<byte> k = stringToByteArray(key);
     vector<byte> mac = sha1_mac(k, m);
     printHex(mac);
 }
 
+void ch29(){
+    string m = "The quick brown fox jumps over the lazy dog";
+    vector<byte> mv = stringToByteArray(m);
+    mv = sha1(mv);
+    printHex(mv);
+}
+
 int main(){
     ch28();
+    ch29();
 }

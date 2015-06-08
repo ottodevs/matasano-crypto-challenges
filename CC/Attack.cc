@@ -190,14 +190,3 @@ unsigned int mt19937_untemper(unsigned int n){
     return y;
 }
 
-bool is_time_seeded(unsigned int n, int threshold){
-    rng gen;
-    time_t now = time(0);
-    bool found = false;
-    for(int s = now; s >= now-threshold and not found; --s){
-        gen.seed(s);
-        if(gen.extract_number() == n)
-            found = true;
-    }
-    return found;
-}

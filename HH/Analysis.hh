@@ -3,6 +3,7 @@
 
 #include "utils.cpp"
 #include "Block.hh"
+#include "RNG.hh"
 #include <algorithm>
 
 
@@ -33,5 +34,7 @@ extern bool is_ECB(const vector<byte>& data);
 
 extern bool mode_detector(vector<byte> (*f)(const vector<byte>&));
 /* Detects the mode (ECB/CBC) the pointed function is encrypting in true:ECB*/
+
+extern bool is_time_seeded(unsigned int n, int threshold);
 
 #endif

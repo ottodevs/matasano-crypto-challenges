@@ -117,6 +117,9 @@ void ch29(){
     if(not found) cout << "not found" << endl;
 }
 
+void ch30(){
+}
+
 int main(){
-    ch29();
+    ch30();
 }

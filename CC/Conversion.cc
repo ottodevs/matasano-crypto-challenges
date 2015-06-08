@@ -13,6 +13,7 @@ int hexToDec(char hex){
 }
 
 byte charToB64(char c){
+    if(c == '=') return 64;
     for(int i = 0; i < 64; ++i){
         if (table_64[i] == c)
             return (byte) i;
@@ -28,7 +29,7 @@ vector<byte> hexToByteArray(const string& hex){
 	return v;
 }
 
-vector<byte> byteArrayToB64(const vector<byte>& v){
+vector<byte> byteArrayToB64(const vector<byte>& v){    
     int n = (int) v.size()/3 * 4;
     if (v.size()%3 == 1)
         n += 2;
@@ -65,23 +66,34 @@ vector<byte> byteArrayToB64(const vector<byte>& v){
             step = 0;
         }
     }
+    if (v.size()%3 > 0) B64.push_back(64);
+    if (v.size()%3 == 1) B64.push_back(64);
     return B64;
 }
 
 vector<byte> b64ToByteArray(const vector<byte>& v){
-    int n = (int) v.size()/4 * 3;
-    if (v.size()%4 == 1)
+    int pad = 0;
+    for(int i = v.size()-1; v[i] == 64; --i) pad++;
+    cout << pad << endl;
+    int n = (int) (((float)(v.size()-pad)/4) * 3);
+    cout << v.size() << endl;
+    cout << n << endl;
+    
+    /*
+    if ((v.size()-pad)%4 == 1)
         n ++;
-    else if (v.size()%4 == 2)
+    else if ((v.size()-pad)%4 == 2)
         n += 2;
-    else if (v.size()%4 == 3)
+    else if ((v.size()-pad)%4 == 3)
         n += 3;
+    */
+    
 
     int p2 = 0;
     int step = 0;
     vector<byte> out (n, 0);
     byte aux;
-    for (int i = 0; i < v.size(); ++i){
+    for (int i = 0; i < v.size()-pad; ++i){
         if(step == 0){
             out[p2] = v[i] << 2;
             ++step;

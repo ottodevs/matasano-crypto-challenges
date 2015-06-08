@@ -18,6 +18,5 @@ extern int big_end_from_array(byte* ini);
 extern int leftrotate(unsigned int n, int r);
 
 extern vector<byte> sha1_glue_padding(int key_length, int message_length);
-extern vector<byte> glue(vector<byte> m);
 
 #endif

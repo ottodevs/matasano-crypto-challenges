@@ -2,7 +2,8 @@
 
 void printB64(const vector<byte>& v){
 	for (int i = 0; i < v.size(); ++i)
-        cout << table_64[(int)v[i]];
+        if(v[i] == '=') cout << '=';
+        else cout << table_64[(int)v[i]];
     cout << endl;
 }
  

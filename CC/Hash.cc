@@ -253,14 +253,3 @@ vector<byte> sha1_glue_padding(int key_length, int message_length){
 		padding.push_back(*(p - i));
 	return padding;
 }
-
-vector<byte> glue(vector<byte> message){
-	unsigned long int ml = message.size()*8;
-	message.push_back(0x80);
-	while((message.size()*8)%512 != 448)
-		message.push_back(0x00);
-	byte* p = (byte*)&ml + 7;
-	for(int i = 0; i < 8; ++i)
-		message.push_back(*(p - i));
-	return message;
-}

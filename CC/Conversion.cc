@@ -79,15 +79,6 @@ vector<byte> b64ToByteArray(const vector<byte>& v){
     cout << v.size() << endl;
     cout << n << endl;
     
-    /*
-    if ((v.size()-pad)%4 == 1)
-        n ++;
-    else if ((v.size()-pad)%4 == 2)
-        n += 2;
-    else if ((v.size()-pad)%4 == 3)
-        n += 3;
-    */
-    
 
     int p2 = 0;
     int step = 0;

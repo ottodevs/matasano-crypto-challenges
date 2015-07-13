@@ -42,3 +42,8 @@ rebuild: $(MAIN)
 	$(Cpp) -lssl -lcrypto -I$(HH) -c $(MAIN)
 	$(Cpp) -lssl -lcrypto -o $(OUT_EXE) $(OBJECTS)
 
+prog:
+	$(Cpp) -lssl -lcrypto -I$(HH) $(CC) -c $(MAIN)
+	$(Cpp) -lssl -lcrypto -o $(OUT_EXE) $(OBJECTS)
+	rm -f set*.o
+

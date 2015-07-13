@@ -9,3 +9,6 @@
 
 #executables
 *.x
+
+#test
+test.cc

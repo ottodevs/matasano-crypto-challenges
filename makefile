@@ -3,7 +3,7 @@ Cpp = g++
 CC=./CC/*.cc
 HH=./HH
 OBJECTS=*.o
-OUT_EXE=crypto.x
+OUT_EXE=crypto
 MAIN=set4.cc
 
 build: $(CC) $(MAIN)
@@ -11,20 +11,20 @@ build: $(CC) $(MAIN)
 	$(Cpp) -lssl -lcrypto -o $(OUT_EXE) $(OBJECTS)
 	rm -f set*.o
 
-set1.x: $(CC) set1.cc clean
+set1: $(CC) set1.cc clean
 	$(Cpp) -lssl -lcrypto -c $(CC) set1.cc -I$(HH)
-	$(Cpp) -lssl -lcrypto -o set1.x $(OBJECTS)
+	$(Cpp) -lssl -lcrypto -o set1 $(OBJECTS)
 	rm -f set1.o
 
 
-set2.x: $(CC) set2.cc clean
+set2: $(CC) set2.cc clean
 	$(Cpp) -lssl -lcrypto -c $(CC) set2.cc -I$(HH)
-	$(Cpp) -lssl -lcrypto -o set2.x $(OBJECTS)
+	$(Cpp) -lssl -lcrypto -o set2 $(OBJECTS)
 	rm -f set2.o
 
-set3.x: $(CC) clean
+set3: $(CC) clean
 	$(Cpp) -lssl -lcrypto -c $(CC) set3.cc -I$(HH)
-	$(Cpp) -lssl -lcrypto -o set3.x $(OBJECTS)
+	$(Cpp) -lssl -lcrypto -o set3 $(OBJECTS)
 	rm -f set3.o
 
 reset: clean

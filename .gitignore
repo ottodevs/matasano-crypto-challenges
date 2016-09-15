@@ -7,8 +7,5 @@
 #swp
 *.swp
 
-#executables
-*.x
-
 #test
 test.cc

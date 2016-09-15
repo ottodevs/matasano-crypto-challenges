@@ -2,6 +2,6 @@ This is my solution (still in the making) for the matasano crypto challenges on 
 Progress: sets 1-3 complete
 
 To compile set x:
-$ make setx.x
+$ make setx
 
 to test a particular challenge run the set and input the number of the challenge

@@ -118,9 +118,3 @@ vector<byte> aes_128_CTR(const vector<byte>& v, const byte keyS[], const vector<
     }
     return ret;
 }
-
-
-
-
-
-

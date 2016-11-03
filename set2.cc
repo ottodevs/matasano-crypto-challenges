@@ -96,7 +96,7 @@ void ch15(){
 void ch16(){
     //we use the previous chars to the forbidden ones on the ascii table and then apply a mask to change the last bit
     string obj = ":admin<true:";
-    
+
     vector<byte> v = User::encryptData(obj);
 
     vector<byte> mask (v.size(), 0);
@@ -114,6 +114,7 @@ void ch16(){
  */
 int main(){
     int ch;
+    cout << "[9-16]" << endl;
     cin >> ch;
     switch(ch){
         case 9:

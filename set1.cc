@@ -8,6 +8,7 @@
 #include "Analysis.hh"
 #include "User.hh"
 #include "Target.hh"
+#include <fstream>
 
 //Convert hex to base64
 void ch1(){
@@ -59,7 +60,7 @@ void ch6(){
     cout << ">Best Keysize: " << ks << endl;
     cout << "-------------------------" << endl << endl;
     vector<byte> keyV = findRepeatingKey(groupBlock(cipher,ks));
-    
+
     cout << "detected key: ";
     printChar(keyV);
     cout << endl << "Change? (y/n)";
@@ -102,11 +103,57 @@ void ch8(){
     find_ECB_line("INPUT/ch8.txt");
 }
 
+
+/*
+ * problem 59 from project euler
+ */
+void ch9(){
+    ifstream infile("/home/shierve/Code/Challenges/euler/p059_cipher.txt");
+    string val_string;
+    vector<byte> cipher;
+    while(getline(infile, val_string, ',')){
+        cipher.push_back((byte)stoi(val_string));
+    }
+    string abc = "abcdefghijklmnopqrstuvwxyz";
+
+    int biggest = 0;
+    vector<byte> key(3);
+    vector<byte> best(3);
+    for(int i = 0; i < abc.size(); ++i){
+        for(int j = 0; j < abc.size(); ++j){
+            for(int k = 0; k < abc.size(); ++k){
+                key[0] = abc[i];
+                key[1] = abc[j];
+                key[2] = abc[k];
+                vector<byte> result = repeating_key_xor(cipher, key);
+                int n = frequency_evaluation(result);
+                if(n > biggest){
+                    biggest = n;
+                    best[0] = key[0];
+                    best[1] = key[1];
+                    best[2] = key[2];
+                }
+            }
+        }
+    }
+
+    cout << endl << "-------------------------" << endl;
+    vector<byte> plain = repeating_key_xor(cipher, best);
+    int t = 0;
+    for(int i = 0; i < plain.size(); ++i){
+        cout << plain[i];
+        t += (int)plain[i];
+    }
+    cout << endl;
+    cout << t << endl;
+}
+
 /*
  * MAIN
  */
 int main(){
     int ch;
+    cout << "[1-8]" << endl;
     cin >> ch;
     switch(ch){
         case 1:
@@ -132,6 +179,9 @@ int main(){
             break;
         case 8:
             ch8();
+            break;
+        case 9:
+            ch9();
             break;
     }
 }

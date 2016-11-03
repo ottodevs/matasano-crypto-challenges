@@ -11,18 +11,18 @@ build: $(CC) $(MAIN)
 	$(Cpp) -lssl -lcrypto -o $(OUT_EXE) $(OBJECTS)
 	rm -f set*.o
 
-set1: $(CC) set1.cc clean
+set1: $(CC) set1.cc cleanmain
 	$(Cpp) -lssl -lcrypto -c $(CC) set1.cc -I$(HH)
 	$(Cpp) -lssl -lcrypto -o set1 $(OBJECTS)
 	rm -f set1.o
 
 
-set2: $(CC) set2.cc clean
+set2: $(CC) set2.cc cleanmain
 	$(Cpp) -lssl -lcrypto -c $(CC) set2.cc -I$(HH)
 	$(Cpp) -lssl -lcrypto -o set2 $(OBJECTS)
 	rm -f set2.o
 
-set3: $(CC) clean
+set3: $(CC) cleanmain
 	$(Cpp) -lssl -lcrypto -c $(CC) set3.cc -I$(HH)
 	$(Cpp) -lssl -lcrypto -o set3 $(OBJECTS)
 	rm -f set3.o
@@ -46,4 +46,3 @@ prog:
 	$(Cpp) -lssl -lcrypto -I$(HH) $(CC) -c $(MAIN)
 	$(Cpp) -lssl -lcrypto -o $(OUT_EXE) $(OBJECTS)
 	rm -f set*.o
-

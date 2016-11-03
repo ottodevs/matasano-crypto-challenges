@@ -152,7 +152,7 @@ void ch22(){
     time_t secs;
     time(&secs);
     srand((unsigned int) secs);
-    int time1 = (int) rand() % 1000; 
+    int time1 = (int) rand() % 1000;
     int time2 = (int) rand() % 1000;
 
 
@@ -237,6 +237,7 @@ void ch24(){
  */
 int main(){
     int ch;
+    cout << "[17-24]" << endl;
     cin >> ch;
     switch(ch){
         case 17:
@@ -263,5 +264,5 @@ int main(){
         case 24:
             ch24();
             break;
-    } 
+    }
 }

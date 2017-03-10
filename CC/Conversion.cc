@@ -21,53 +21,77 @@ byte charToB64(char c){
     return 63;
 }
 
+char letter(byte c){
+	char lt = (char) c;
+	if(c == ' ') return c;
+	if(c >= 'a' and c <= 'z') return lt;
+	if(c >= 'A' and c <= 'Z') return lt-'A'+'a';
+	if((c < 32 or c > 126) and c != 8 and c != 9 and c != 10){
+		return '?';
+	}
+	return '$';
+}
+
 vector<byte> hexToByteArray(const string& hex){
-	vector<byte> v (hex.size() / 2);
-	for(int i = 0; i < hex.size(); i += 2){
-		v[i/2] = hexToDec(hex[i])*16 + hexToDec(hex[i+1]);
+	int n;
+	if(hex.size()%2 == 0) n = hex.size()/2;
+	else n = (hex.size()/2) + 1;
+	vector<byte> v (n, 0);
+	for(int i = 0; i < hex.size(); i++){
+		byte aux = (byte)hexToDec(hex[hex.size()-(i+1)]);
+		if((i+1)%2==0){
+			aux = aux << 4;
+		}
+		v[v.size()-1-(i/2)] = v[v.size()-1-(i/2)] | aux;
 	}
 	return v;
 }
 
-vector<byte> byteArrayToB64(const vector<byte>& v){    
-    int n = (int) v.size()/3 * 4;
-    if (v.size()%3 == 1)
-        n += 2;
-    else if (v.size()%3 == 2)
-        n += 3;
+vector<byte> byteArrayToB64(const vector<byte>& v){
+	double nd = (double) v.size() * 4.0 / 3.0;
+	int n;
+	if((int)nd == nd){
+		n = (int) nd;
+	}
+	else{
+		n = (int) nd + 1;
+	}
 
-    int p2 = 0;
+    int p = 0;
     int step = 0;
     vector<byte> B64 (n, 0);
-    byte aux;
+    byte aux = 0;
     for (int i = 0; i < v.size(); ++i){
         if(step == 0){
-            B64[p2] = v[i] >> 2;
-            ++p2;
+			B64[p] = v[i] >> 2;
+            ++p;
             aux = v[i] << 6;
-            B64[p2] = aux >> 2;
+            B64[p] = aux >> 2;
             ++step;
         }
         else if(step == 1){
-            aux = v[i] >> 4;
-            B64[p2] = B64[p2] | aux;
-            ++p2;
+			aux = v[i] >> 4;
+            B64[p] = B64[p] | aux;
+            ++p;
             aux = v[i] << 4;
-            B64[p2] = aux >> 2;
+            B64[p] = aux >> 2;
             ++step;
         }
         else if(step == 2){
             aux = v[i] >> 6;
-            B64[p2] = B64[p2] | aux;
-            ++p2;
+            B64[p] = B64[p] | aux;
+            ++p;
             aux = v[i] << 2;
-            B64[p2] = aux >> 2;
-            ++p2;
+            B64[p] = aux >> 2;
+            ++p;
             step = 0;
         }
     }
-    if (v.size()%3 > 0) B64.push_back(64);
-    if (v.size()%3 == 1) B64.push_back(64);
+	if(step == 2) B64.push_back(64);
+	if(step == 1){
+		B64.push_back(64);
+		B64.push_back(64);
+	}
     return B64;
 }
 
@@ -78,7 +102,7 @@ vector<byte> b64ToByteArray(const vector<byte>& v){
     int n = (int) (((float)(v.size()-pad)/4) * 3);
     cout << v.size() << endl;
     cout << n << endl;
-    
+
 
     int p2 = 0;
     int step = 0;
@@ -141,12 +165,3 @@ vector<byte> b64StringToByteArray(const string& str){
         out[i] = charToB64(out[i]);
     return b64ToByteArray(out);
 }
-
-
-
-
-
-
-
-
-

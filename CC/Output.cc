@@ -2,11 +2,11 @@
 
 void printB64(const vector<byte>& v){
 	for (int i = 0; i < v.size(); ++i)
-        if(v[i] == '=') cout << '=';
-        else cout << table_64[(int)v[i]];
+        cout << table_64[(int)v[i]];
+	//check if '='s needed
     cout << endl;
 }
- 
+
 void printHex(const vector<byte>& v){
     for(int i = 0; i < v.size(); ++i){
         cout << table_hex[v[i] >> 4];
@@ -45,10 +45,5 @@ void printAscii(byte i){
         cout << (char)i;
     else
         cout << "\\" << (int)i;
- 
+
 }
-
-
-
-
-

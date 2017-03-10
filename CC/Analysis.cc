@@ -12,12 +12,6 @@ int bitsInByte(byte b){
     return bits;
 }
 
-bool comp(Letter l1, Letter l2){
-    if(l1.occurences > l2.occurences)
-        return true;
-    return false;
-}
-
 //PUBLIC
 
 int hamming_distance(const vector<byte>& x, const vector<byte>& y){
@@ -57,7 +51,7 @@ int find_key_size(const vector<byte>& blockArray, int a, int b){
         values[k - a] = (float) acum/(n*b);
     }
 
-    
+
     int ret;
     for(int i = 0; i < values.size(); ++i){
         int min = values[0];
@@ -74,85 +68,67 @@ int find_key_size(const vector<byte>& blockArray, int a, int b){
 }
 
 int frequency_evaluation(const vector<byte>& v){
-    //TODO: whole function could be made simpler with maps
 
-    vector<Letter> frequency (26 + 1); //26 letters + 1 for symbols
+    vector<int> frequency(26, 0);
+    int symbols = 0;
+
     int score = 0;
-    for (int i = 0; i < 26+1; ++i){
-        frequency[i].value = frequency_table[26 + 1 - i];
-        frequency[i].occurences = 0;
-        for (int i2 = 0; i2 < v.size(); ++i2){
-            char ch = frequency[i].value;
-            if(ch != '&'){
-                if (ch == (char)v[i2] or ch == (char)(v[i2] + 32))
-                    frequency[i].occurences++;
-            }
-            else if(((char)v[i2] >= 33 and (char)v[i2] <= 47) or ((char)v[i2] >= 58 and (char)v[i2] <= 64)
-                   or ((char)v[i2] >= 91 and (char)v[i2] <= 96) or ((char)v[i2] >= 123 and (char)v[i2] <= 126)){
-                frequency[i].occurences++;
-            }
+    for (int i = 0; i < v.size(); ++i){
+        char lt = letter(v[i]);
+        if(lt == '?'){
+            return -1;
+        }
+        else if(lt == '$'){
+            symbols++;
+        }
+        else if(lt != ' '){
+            frequency[(int)(lt-'a')]++;
         }
     }
-    sort (frequency.begin(), frequency.end(), comp);
-    //frequency is sorted
+    string fs = freq_string(frequency);
 
+    //6 most frequent characters
     for(int i = 0; i < 6; ++i){
         for(int i2 = 0; i2 < 6; ++i2){
-            if(frequency_table[i] == frequency[i2].value)
+            if(frequency_table[i] == fs[i2])
                 score+=3;
         }
     }
 
-    /*
-    for(int i = 3; i < 6; ++i){
-        for(int i2 = 3; i2 < 6; ++i2){
-            if(frequency_table[i] == frequency[i2].value)
-                score++;
-        }
-    }
-    */
- 
+    //next 6
     for(int i = 6; i < 12; ++i){
         for(int i2 = 6; i2 < 12; ++i2){
-            if(frequency_table[i] == frequency[i2].value)
+            if(frequency_table[i] == fs[i2])
                 score+=2;
-        } 
+        }
     }
-    
+
+    //last 6
     for(int i = 20; i < 26; ++i){
         for(int i2 = 20; i2 < 26; ++i2){
-            if(frequency_table[i] == frequency[i2].value)
+            if(frequency_table[i] == fs[i2])
                 score++;
         }
     }
-    
-    //eliminate and penalize results with strange characters
+
+    //penalize results with lots of strange characters
     for(int i = 0; i < v.size(); ++i){
-        if ((v[i] >= 127 or v[i] < 32) and v[i] != 8 and v[i] != 9 and v[i] != 10)
-            return -1;
-        //this chars penalize but don't eliminate
-        if(v[i] == '|' or v[i] == '@' or v[i] == ';' or v[i] == '^' or v[i] == '`' or v[i] == '~' or v[i] == '*' or v[i] == '<' or v[i] == '>')
+        //this chars penalize
+        if(v[i] == '|' or v[i] == ';' or v[i] == '^' or v[i] == '`' or v[i] == '~' or v[i] == '<' or v[i] == '>')
             score -= 2;
     }
 
     //penalty for too many symbols
     int max_occ = v.size()/SYMB_FREQ;
-    for(int i = 0; i < frequency.size(); ++i){
-        if(frequency[i].value == '&'){
-            if(frequency[i].occurences >= max_occ)
-                return -1;
-            else
-                return score;
-        }
-    }
+    if (symbols > max_occ) score -= 7;
 
     //penalty for too many numbers
-    int numbers = 0;
+    /*int numbers = 0;
     for(int i = 0; i < v.size(); ++i){
         if((char)v[i] >= 48 and (char)v[i] < 58)
             numbers++;
     }
-    if(numbers >= max_occ) score -= 7;
+    if(numbers >= max_occ) score -= 7;*/
 
     return score;
 }
@@ -169,7 +145,7 @@ vector< vector<byte> > groupBlock(vector<byte> blockArray, int keySize){
 }
 
 bool is_ECB(const vector<byte>& data){
-    
+
     int n = (int) data.size()/16;
     if(data.size() % 16 != 0)
         n++;
@@ -218,5 +194,3 @@ bool is_time_seeded(unsigned int n, int threshold){
     }
     return found;
 }
-
-

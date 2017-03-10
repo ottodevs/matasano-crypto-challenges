@@ -66,7 +66,7 @@ void byte_at_a_time(vector<byte> (*f)(const vector<byte>&)){
                 found = true;
             }
         }
-        
+
         found = false;
         for(int i = 0; i < shiftable.size() - 1 and not found; ++i){
             //AAAABA||AAABAA ...
@@ -179,14 +179,13 @@ unsigned int mt19937_untemper(unsigned int n){
     unsigned long int z = n;
     unsigned long int y = z xor (z >> 18);
     z = y xor ((y << 15) bitand 0xefc60000);
-    
+
     y = z xor ((z << 7) bitand 0x9d2c5680);
     y = z xor ((y << 7) bitand 0x9d2c5680);
     y = z xor ((y << 7) bitand 0x9d2c5680);
     z = z xor ((y << 7) bitand 0x9d2c5680);
-    
+
     y = z xor (z >> 11);
     return (z xor (y >> 11));
     return y;
 }
-

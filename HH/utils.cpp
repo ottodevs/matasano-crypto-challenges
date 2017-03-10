@@ -10,15 +10,16 @@ using namespace std;
 typedef unsigned char byte;
 
 const char table_64[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-                        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 
-                        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 
-                        'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 
-                        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 
-                        'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 
-                        'w', 'x', 'y', 'z', '0', '1', '2', '3', 
-                        '4', '5', '6', '7', '8', '9', '+', '/'};
+                        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+                        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+                        'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+                        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                        'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                        'w', 'x', 'y', 'z', '0', '1', '2', '3',
+                        '4', '5', '6', '7', '8', '9', '+', '/',
+                        '='};
 
-const char table_hex[] = {'0', '1', '2', '3', '4', '5', '6', '7', 
+const char table_hex[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                         '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
 const char frequency_table[] = {'e', 't', 'a', 'o', 'i', 'n', 's',
@@ -27,7 +28,7 @@ const char frequency_table[] = {'e', 't', 'a', 'o', 'i', 'n', 's',
                                 'k', 'j', 'x', 'q', 'z'};
 
 const int THRES = 11;
-const int SYMB_FREQ = 3; //[Decryption::frequency_evaluation]
+const int SYMB_FREQ = 5; //[Decryption::frequency_evaluation]
 
 const string ch1_str = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
 const string ch2_str1 = "1c0111001f010100061a024b53535009181c";
@@ -43,7 +44,23 @@ const string pre = "comment1=cooking%20MCs;userdata=";
 const string app = ";comment2=%20like%20a%20pound%20of%20bacon";
 const string ch18_str = "L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/2syLXzhPweyyMTJULu/6/kXX0KSvoOLSFQ==";
 
-
+inline string freq_string(vector<int>& v){
+    int max = -1;
+    int maxi = 0;
+    string str = "";
+    for(int it = 0; it < 26; ++it){
+        for(int i = 0; i < v.size(); ++i){
+            if(v[i] > max){
+                max = v[i];
+                maxi = i;
+            }
+        }
+        str.push_back((char)(maxi+'a'));
+        v[maxi] = -1;
+        max = -1;
+    }
+    return str;
+}
 
 //pads data to given size in bytes
 inline vector<byte> pkcs7_pad(const vector<byte>& data, int size){

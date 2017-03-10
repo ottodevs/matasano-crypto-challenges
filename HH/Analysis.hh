@@ -12,14 +12,7 @@
  * analysing data
  */
 
-struct Letter{
-    char value;
-    int occurences;
-}; 
-
 extern int bitsInByte(byte b); //returns '1' bits in a byte
-
-extern bool comp(Letter l1, Letter l2); //comparation for the sort function
 
 extern int hamming_distance(const vector<byte>& x, const vector<byte>& y); //returns hamming/edit distance
 

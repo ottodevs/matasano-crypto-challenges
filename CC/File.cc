@@ -63,6 +63,3 @@ vector<string> getStrings(const string filename){
 
     return ret;
 }
-
-
-

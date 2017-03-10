@@ -44,23 +44,6 @@ const string pre = "comment1=cooking%20MCs;userdata=";
 const string app = ";comment2=%20like%20a%20pound%20of%20bacon";
 const string ch18_str = "L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/2syLXzhPweyyMTJULu/6/kXX0KSvoOLSFQ==";
 
-inline string freq_string(vector<int>& v){
-    int max = -1;
-    int maxi = 0;
-    string str = "";
-    for(int it = 0; it < 26; ++it){
-        for(int i = 0; i < v.size(); ++i){
-            if(v[i] > max){
-                max = v[i];
-                maxi = i;
-            }
-        }
-        str.push_back((char)(maxi+'a'));
-        v[maxi] = -1;
-        max = -1;
-    }
-    return str;
-}
 
 //pads data to given size in bytes
 inline vector<byte> pkcs7_pad(const vector<byte>& data, int size){
@@ -71,6 +54,7 @@ inline vector<byte> pkcs7_pad(const vector<byte>& data, int size){
     return out;
 }
 
+//strips pkcs#7 padding
 inline bool remove_padding(vector<byte>& data){
     int num = data[data.size() - 1];
     if (num > data.size()) return false;

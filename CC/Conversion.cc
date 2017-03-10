@@ -98,40 +98,37 @@ vector<byte> byteArrayToB64(const vector<byte>& v){
 vector<byte> b64ToByteArray(const vector<byte>& v){
     int pad = 0;
     for(int i = v.size()-1; v[i] == 64; --i) pad++;
-    cout << pad << endl;
-    int n = (int) (((float)(v.size()-pad)/4) * 3);
-    cout << v.size() << endl;
-    cout << n << endl;
+    double nd = (((double)v.size()-pad)/4.0) * 3.0;
+	int n = (int)nd;
+	if(nd != n) n++;
 
 
-    int p2 = 0;
+    int p = 0;
     int step = 0;
     vector<byte> out (n, 0);
     byte aux;
     for (int i = 0; i < v.size()-pad; ++i){
         if(step == 0){
-            out[p2] = v[i] << 2;
+            out[p] = v[i] << 2;
             ++step;
         }
         else if(step == 1){
             aux = v[i] >> 4;
-            out[p2] = out[p2] | aux;
-            ++p2;
-            aux = v[i] << 4;
-            out[p2] = aux;
+            out[p] = out[p] | aux;
+            ++p;
+            out[p] = v[i] << 4;
             ++step;
         }
         else if(step == 2){
             aux = v[i] >> 2;
-            out[p2] = out[p2] | aux;
-            ++p2;
-            aux = v[i] << 6;
-            out[p2] = aux;
+            out[p] = out[p] | aux;
+            ++p;
+            out[p] = v[i] << 6;
             ++step;
         }
         else if(step == 3){
-            out[p2] = out[p2] | v[i];
-            ++p2;
+            out[p] = out[p] | v[i];
+            ++p;
             step = 0;
         }
     }

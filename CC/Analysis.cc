@@ -12,6 +12,24 @@ int bitsInByte(byte b){
     return bits;
 }
 
+string freq_string(vector<int>& v){
+    int max = -1;
+    int maxi = 0;
+    string str = "";
+    for(int it = 0; it < 26; ++it){
+        for(int i = 0; i < v.size(); ++i){
+            if(v[i] > max){
+                max = v[i];
+                maxi = i;
+            }
+        }
+        str.push_back((char)(maxi+'a'));
+        v[maxi] = -1;
+        max = -1;
+    }
+    return str;
+}
+
 //PUBLIC
 
 int hamming_distance(const vector<byte>& x, const vector<byte>& y){

@@ -12,7 +12,9 @@
  * analysing data
  */
 
-extern int bitsInByte(byte b); //returns '1' bits in a byte
+extern int bitsInByte(byte b); //counts number of '1' bits in a byte
+
+extern string freq_string(vector<int>& v); //returns a string wih all the letters in order of more to less frequency
 
 extern int hamming_distance(const vector<byte>& x, const vector<byte>& y); //returns hamming/edit distance
 

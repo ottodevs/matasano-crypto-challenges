@@ -89,13 +89,7 @@ void ch20(){
 
     vector< vector<byte> > ciphers(strings.size());
     for(int i = 0; i < ciphers.size(); ++i){
-        if(i == 23){ //dirty fix
-            string b64 = "Q3V6IHlvdXIgYWJvdXQgdG8gc2VlIGEgZGlzYXN0cm91cyBzaWdodCAvIEEgcGVyZm9ybWFuY2UgbmV2ZXIgYWdhaW4gcGVyZm9ybWVkIG9uIGEgbWljO";
-            ciphers[i] = aes_128_CTR(b64StringToByteArray(b64), keySub, nonce);
-        }
-        else{
-            ciphers[i] = (aes_128_CTR(b64StringToByteArray(strings[i]), keySub, nonce));
-        }
+        ciphers[i] = (aes_128_CTR(b64StringToByteArray(strings[i]), keySub, nonce));
     }
 
     int min_size = ciphers[0].size();

@@ -50,7 +50,7 @@ void ch13(){
     vector<byte> admin_str = stringToByteArray("XXXXXXXXXXadmin");
     admin_str = pkcs7_pad(admin_str, 16 + 10);
     string mail(admin_str.begin(), admin_str.end());
-    mail += "XXXX";
+    mail += "XXXX"; // only works for uid < 10
     User mike(mail);
 
     vector<byte> cipher = mike.getEncryptedProfile();

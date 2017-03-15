@@ -12,7 +12,7 @@ void ch25(){
     vector<byte> nonce = intToByteArray(12530, false);
     v = aes_128_CTR(v, keySub, nonce);
     vector<byte> plain;
-    
+
     for(int i = 0; i < v.size(); ++i){
         bool f = false;
         vector<byte> letter;
@@ -26,7 +26,7 @@ void ch25(){
             }
         }
     }
-    
+
     // plain has the unencrypted content
     cout << endl;
 }
@@ -48,7 +48,7 @@ void ch26(){
 
 void ch27(){
     //encrypt url string with User (3 blocks)
-    string s = "www.aaaaaaaaaaaa.aaaaaaaaaaaaaaa.aaaaaaaaaaa.com";
+    string s = "www.aaaaaaaaaaaa.com/aaaaaaaaaaaaaaa/aaaaaaaaaaa";
     vector<byte> v = User::encryptData(s);
     //modify the message C1, 0, C1
     for(int i = 16; i < 32; ++i){
@@ -83,12 +83,12 @@ void ch29(){
     vector<byte> mac = sha1_mac(k, m);
     printHex(mac);
     //hash additional data
-    unsigned int h0, h1, h2, h3, h4;
-    h0 = big_end_from_array(&mac[0]);
-    h1 = big_end_from_array(&mac[4]);
-    h2 = big_end_from_array(&mac[8]);
-    h3 = big_end_from_array(&mac[12]);
-    h4 = big_end_from_array(&mac[16]);
+    uint32_t h0, h1, h2, h3, h4;
+    h0 = int_from_array(&mac[0]);
+    h1 = int_from_array(&mac[4]);
+    h2 = int_from_array(&mac[8]);
+    h3 = int_from_array(&mac[12]);
+    h4 = int_from_array(&mac[16]);
     change_endian(h0);
     change_endian(h1);
     change_endian(h2);
@@ -118,7 +118,10 @@ void ch29(){
 }
 
 void ch30(){
-
+    string st = "";
+    vector<byte> v = stringToByteArray(st);
+    v = md4(v);
+    printHex(v);
 }
 
 int main(){

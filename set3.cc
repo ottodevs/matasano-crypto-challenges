@@ -79,9 +79,7 @@ void ch19(){
 void ch20(){
 
     /*
-     * the solution found is a little off because the frequency_evaluation function
-     * is not perfect, so to get the desired output you need to manually evaluate the output
-     * and change some bytes of the detected key
+     * Only breaks until size of smallest string.
      */
 
     vector<string> strings = getStrings("INPUT/ch20.txt");

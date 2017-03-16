@@ -55,6 +55,7 @@ inline vector<byte> pkcs7_pad(const vector<byte>& data, int size){
 }
 
 //strips pkcs#7 padding
+
 inline bool remove_padding(vector<byte>& data){
     int num = data[data.size() - 1];
     if (num > data.size()) return false;

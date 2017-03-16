@@ -5,6 +5,7 @@
 #include "Conversion.hh"
 #include "User.hh"
 #include "Hash.hh"
+#include "Data.hh"
 
 void ch25(){
     vector<byte> v = fetchFromFile("INPUT/ch7.txt");
@@ -79,24 +80,19 @@ void ch29(){
     string message = "comment1=cooking%20MCs;userdata=foo;comment2=%20like%20a%20pound%20of%20bacon";
     vector<byte> m = stringToByteArray(message);
     vector<byte> k = gen_random_bytes(-1);
-    cout << k.size() << endl;
+    cout << "ks: " << k.size() << endl;
     vector<byte> mac = sha1_mac(k, m);
     printHex(mac);
     //hash additional data
     uint32_t h0, h1, h2, h3, h4;
-    h0 = int_from_array(&mac[0]);
-    h1 = int_from_array(&mac[4]);
-    h2 = int_from_array(&mac[8]);
-    h3 = int_from_array(&mac[12]);
-    h4 = int_from_array(&mac[16]);
-    change_endian(h0);
-    change_endian(h1);
-    change_endian(h2);
-    change_endian(h3);
-    change_endian(h4);
+    h0 = uint32_from_array(&mac[0]);
+    h1 = uint32_from_array(&mac[4]);
+    h2 = uint32_from_array(&mac[8]);
+    h3 = uint32_from_array(&mac[12]);
+    h4 = uint32_from_array(&mac[16]);
     vector<byte> new_message = stringToByteArray(";admin=true");
     //1024 will be correct for not too big keysizes
-    unsigned long int mm = 1024 + new_message.size()*8;
+    uint64_t mm = 1024 + new_message.size()*8;
     vector<byte> new_mac = sha1(new_message, h0, h1, h2, h3, h4, mm);
     printHex(new_mac);
     //try different key lengths to forge the message: (message|padding|new)
@@ -118,10 +114,45 @@ void ch29(){
 }
 
 void ch30(){
-    string st = "";
+    string st = "message digest";
     vector<byte> v = stringToByteArray(st);
     v = md4(v);
     printHex(v);
+    cout << "------------------------" << endl;
+
+    string message = "comment1=cooking%20MCs;userdata=foo;comment2=%20like%20a%20pound%20of%20bacon";
+    vector<byte> m = stringToByteArray(message);
+    vector<byte> k = gen_random_bytes(-1);
+    cout << "ks: " << k.size() << endl;
+    vector<byte> mac = md4_mac(k, m);
+    printHex(mac);
+    //hash additional data
+    uint32_t a, b, c, d;
+    a = uint32_from_array(&mac[0]);
+    b = uint32_from_array(&mac[4]);
+    c = uint32_from_array(&mac[8]);
+    d = uint32_from_array(&mac[12]);
+    vector<byte> new_message = stringToByteArray(";admin=true");
+    //1024 will be correct for not too big keysizes
+    uint64_t mm = 1024 + new_message.size()*8;
+    vector<byte> new_mac = md4(new_message, a, b, c, d, mm);
+    printHex(new_mac);
+    //try different key lengths to forge the message: (message|padding|new)
+    bool found = false;
+    for(int i = 0; i < 100 and not found; ++i){
+        vector<byte> forged_m = append_arrays(m, md4_glue_padding(i, m.size()));
+        forged_m = append_arrays(forged_m, new_message);
+        //printChar(forged_m);
+        //cout << endl;
+        vector<byte> comp = md4_mac(k, forged_m);
+        if(comp == new_mac){
+            found = true;
+            cout << "keysize: " << i << endl;
+            printChar(forged_m);
+            cout << endl;
+        }
+    }
+    if(not found) cout << "not found" << endl;
 }
 
 int main(){

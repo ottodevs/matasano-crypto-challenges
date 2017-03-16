@@ -21,6 +21,8 @@ extern vector<byte> b64ToByteArray(const vector<byte>& v); //b64 array to byte a
 
 extern vector<byte> stringToByteArray(const string& str); //ascii string to byte array.
 
+extern vector<byte> b64StringToArray(const string& str);
+
 extern vector<byte> b64StringToByteArray(const string& str);
 
 extern vector<byte> intToByteArray(const unsigned long int &num, bool invert);

@@ -98,10 +98,8 @@ vector<byte> byteArrayToB64(const vector<byte>& v){
 vector<byte> b64ToByteArray(const vector<byte>& v){
     int pad = 0;
     for(int i = v.size()-1; v[i] == 64; --i) pad++;
-    double nd = (((double)v.size()-pad)/4.0) * 3.0;
-	int n = (int)nd;
-	if(nd != n) n++;
-
+    int n = (v.size()*3/4);
+	n -= pad;
 
     int p = 0;
     int step = 0;
@@ -156,9 +154,16 @@ vector<byte> intToByteArray(const unsigned long int &num, bool invert){
     return out;
 }
 
-vector<byte> b64StringToByteArray(const string& str){
-    vector<byte> out = stringToByteArray(str);
+vector<byte> b64StringToArray(const string& str){
+    vector<byte> out (str.size());
     for(int i = 0; i < out.size(); ++i)
-        out[i] = charToB64(out[i]);
+        out[i] = charToB64(str[i]);
+    return out;
+}
+
+vector<byte> b64StringToByteArray(const string& str){
+	vector<byte> out(str.size());
+    for(int i = 0; i < out.size(); ++i)
+        out[i] = charToB64(str[i]);
     return b64ToByteArray(out);
 }

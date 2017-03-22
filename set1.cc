@@ -1,7 +1,6 @@
 #include "Conversion.hh"
-#include "Output.hh"
-#include "Xor.hh"
 #include "Attack.hh"
+#include "Data.hh"
 #include "File.hh"
 #include "Aes.hh"
 #include "Block.hh"
@@ -12,16 +11,17 @@
 
 //Convert hex to base64
 void ch1(){
-    vector<byte> v = hexToByteArray(ch1_str); //string ch1_str located at utils.cpp
-    v = byteArrayToB64(v);
-    printB64(v);
+    Data d(ch1_str, 0); //string ch1_str located at utils.cpp
+    d.toType(1);
+    cout << d << endl;
 }
 
 //Fixed XOR
 void ch2(){
-    vector<byte> v1 = hexToByteArray(ch2_str1);
-    vector<byte> v2 = hexToByteArray(ch2_str2);
-    printHex(fixed_xor(v1,v2));
+    Data d1(ch2_str1);
+    Data d2(ch2_str2);
+    Data d3 = d1^d2;
+    cout << d3 << endl;
 }
 
 //Single-byte XOR cipher
@@ -29,7 +29,7 @@ void ch2(){
  * SOL: Cooking MC's like a pound of bacon (key:88)
  */
 void ch3(){
-    vector<byte> cipher = hexToByteArray(ch3_str);
+    Data cipher(ch3_str);
     testBytes(cipher, THRES); //THRES is a constant defined in utils.cpp
 }
 
@@ -43,9 +43,9 @@ void ch4(){
 
 //Implement repeating-key XOR
 void ch5(){
-    vector<byte> v = stringToByteArray(ch5_str);
-    v = repeating_key_xor(v, "ICE");
-    printHex(v);
+    Data d(ch5_str, 2);
+    d = d ^ "ICE";
+    cout << d << endl;
 }
 
 //Break repeating-key XOR
@@ -55,7 +55,7 @@ void ch5(){
  * decrypts to the lyrics for "Play That Funky Music"
  */
 void ch6(){
-    vector<byte> cipher = fetchFromFile("INPUT/ch6.txt");
+    Data cipher(fetchFromFile("INPUT/ch6.txt"));
     int ks = find_key_size(cipher, 2, 40);
     cout << ">Best Keysize: " << ks << endl;
     cout << "-------------------------" << endl << endl;
@@ -66,7 +66,6 @@ void ch6(){
     cout << endl << "Change? (y/n)";
     char ans;
     cin >> ans;
-
     string key;
     if(ans == 'Y' or ans == 'y'){
         char keyA[ks + 1];
@@ -79,9 +78,9 @@ void ch6(){
         key = string(keyV.begin(), keyV.end());
     }
     cout << endl << "-------------------------" << endl;
-    vector<byte> plain = repeating_key_xor(cipher, key);
-    printChar(plain);
-    cout << endl;
+    Data plain = cipher ^ key;
+    plain.toType(2);
+    cout << plain << endl;
 }
 
 //AES in ECB mode
@@ -89,10 +88,11 @@ void ch6(){
  * SOL: decrypts to same lyrics as challege 6
  */
 void ch7(){
-    vector<byte> v = fetchFromFile("INPUT/ch7.txt");
-    v = aes_128_ECB_de(v, keySub);
-    printChar(v);
-    cout << endl;
+    Data d(fetchFromFile("INPUT/ch7.txt"));
+    d = aes_128_ECB_de(d, keySub);
+    d.toType(2);
+    d.pkcs7_strip_padding();
+    cout << d << endl;
 }
 
 //Detect AES in ECB mode

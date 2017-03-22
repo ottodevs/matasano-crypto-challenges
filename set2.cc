@@ -3,6 +3,7 @@
 #include "File.hh"
 #include "Aes.hh"
 #include "Block.hh"
+#include "Data.hh"
 #include "Target.hh"
 #include "User.hh"
 #include "Xor.hh"
@@ -12,10 +13,9 @@
 //Implement PKCS#7 padding
 void ch9(){
     string ys = "YELLOW SUBMARINE";
-    vector<byte> v = stringToByteArray(ys);
-    v = pkcs7_pad(v, 20);
-    printChar(v);
-    cout << endl;
+    Data d(ys, 2);
+    d.pkcs7_pad(20);
+    cout << d << endl;
 }
 
 //Implement CBC mode
@@ -23,11 +23,12 @@ void ch9(){
  * SOL: same lyrics as in set 1. Somebody really likes this song
  */
 void ch10(){
-    vector<byte> v = fetchFromFile("INPUT/ch10.txt");
+    Data d = Data(fetchFromFile("INPUT/ch10.txt"));
     vector<byte> iv(16, 0);
-    v = aes_128_CBC_de(v, keySub, iv);
-    printChar(v);
-    cout << endl;
+    d = aes_128_CBC_de(d, keySub, iv);
+    d.pkcs7_strip_padding();
+    d.toType(2);
+    cout << d << endl;
 }
 
 //An ECB/CBC detection oracle
@@ -47,13 +48,14 @@ void ch12(){
 //ECB cut-and-paste
 void ch13(){
 
-    vector<byte> admin_str = stringToByteArray("XXXXXXXXXXadmin");
-    admin_str = pkcs7_pad(admin_str, 16 + 10);
-    string mail(admin_str.begin(), admin_str.end());
+    Data admin_str("XXXXXXXXXXadmin", 2);
+    admin_str.pkcs7_pad(16 + 10);
+    vector<byte> av = admin_str.getData();
+    string mail(av.begin(), av.end());
     mail += "XXXX"; // only works for uid < 10
     User mike(mail);
 
-    vector<byte> cipher = mike.getEncryptedProfile();
+    Data cipher = mike.getEncryptedProfile();
 
     //cut and paste
     vector<byte> block1 (16);
@@ -66,9 +68,8 @@ void ch13(){
 
     mike.update(cipher);
     string ss = mike.getString();
-    vector<byte> v = stringToByteArray(ss);
-    printChar(v);
-    cout << endl;
+    Data dd(ss, 2);
+    cout << dd << endl;
 }
 
 //Byte-at-a-time ECB decryption(Harder)
@@ -80,15 +81,21 @@ void ch14(){
 
 //PKCS#7 padding validation
 void ch15(){
-    vector<byte> v = stringToByteArray(ch15_str);
-    v = pkcs7_pad(v, 16);
-    printChar(v);
-    if(remove_padding(v)) cout << endl << "padding removed" << endl;
+    Data d(ch15_str, 2);
+    d.pkcs7_pad(16);
+    cout << d << endl;
+    if(d.pkcs7_validate_padding()){
+        d.pkcs7_strip_padding();
+        cout << endl << "padding removed" << endl;
+    }
     else cout << endl << "incorrect padding" << endl;
-    vector<byte> b (4,5);
-    v = append_arrays(v, b);
-    printChar(v);
-    if(remove_padding(v)) cout << endl << "padding removed" << endl;
+    Data b (4,5);
+    d += b;
+    cout << d << endl;
+    if(d.pkcs7_validate_padding()){
+        d.pkcs7_strip_padding();
+        cout << endl << "padding removed" << endl;
+    }
     else cout << endl << "incorrect padding" << endl;
 }
 
@@ -97,15 +104,15 @@ void ch16(){
     //we use the previous chars to the forbidden ones on the ascii table and then apply a mask to change the last bit
     string obj = ":admin<true:";
 
-    vector<byte> v = User::encryptData(obj);
+    Data d = User::encryptData(obj);
 
-    vector<byte> mask (v.size(), 0);
+    vector<byte> mask (d.size(), 0);
     mask[16] = 1;
     mask[16 + 6] = 1;
     mask[16 + 11] = 1;
-    v = fixed_xor(v, mask);
+    d = d ^ mask;
 
-    if(User::searchString(v)) cout << "admin" << endl;
+    if(User::searchString(d)) cout << "admin" << endl;
     else cout << "not admin" << endl;
 }
 

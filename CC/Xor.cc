@@ -17,7 +17,7 @@ vector<byte> single_key_xor(const vector<byte>& buffer1, byte k){
     vector<byte> out (buffer1.size(), 0);
     for (int i = 0; i < buffer1.size(); ++i){
         out[i] = buffer1[i] xor k;
-    }    
+    }
     return out;
 }
 
@@ -35,7 +35,7 @@ vector<byte> repeating_key_xor(const vector<byte>& in, string key){
     return out;
 }
 
-vector<byte> repeating_key_xor(const vector<byte>& in, vector<byte>& key){
+vector<byte> repeating_key_xor(const vector<byte>& in, const vector<byte>& key){
     vector<byte> out (in.size());
     int p = 0;
     for(int i = 0; i < in.size(); ++i){
@@ -51,23 +51,10 @@ vector<byte> repeating_key_xor(const vector<byte>& in, vector<byte>& key){
 vector<byte> block_xor(byte *v, byte *b){
     vector<byte> x (16);
     vector<byte> y (16);
-    for(int i = 0; i < 16; ++i){
+    for(int i = 0; i < 16; ++i, ++v, ++b){
         x[i] = *v;
         y[i] = *b;
-        ++v;
-        ++b;
     }
     x = fixed_xor(x, y);
     return x;
 }
-
-
-
-
-
-
-
-
-
-
-

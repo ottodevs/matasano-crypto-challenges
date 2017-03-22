@@ -19,17 +19,17 @@ public:
     rng(int seed);
 
     //create rng from state
-    rng(unsigned int* s);
+    rng(uint32_t* s);
 
     void seed(int seed);
 
-    unsigned int extract_number();
+    uint32_t extract_number();
 
     void generate_numbers();
 
     void set_index(int i);
 
-    unsigned int* get_state();
+    uint32_t* get_state();
 
 };
 #endif

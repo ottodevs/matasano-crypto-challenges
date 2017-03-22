@@ -25,7 +25,7 @@ extern vector<byte> b64StringToArray(const string& str);
 
 extern vector<byte> b64StringToByteArray(const string& str);
 
-extern vector<byte> intToByteArray(const unsigned long int &num, bool invert);
+extern vector<byte> intToByteArray(const uint64_t &num, bool invert);
     /* turns 8byte long int into byte array. invert true to turn little endian to big endian and viceversa */
 
 

@@ -3,6 +3,7 @@
 
 #include "utils.cpp"
 #include "Block.hh"
+#include "Data.hh"
 #include "Output.hh"
 //#include <openssl/sha.h>
 

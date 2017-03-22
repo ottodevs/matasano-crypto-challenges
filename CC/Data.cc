@@ -25,6 +25,11 @@ Data::Data(int i, byte b){
     this->type = 0;
 }
 
+Data::Data(string input){
+    data = hexToByteArray(input);
+    this->type = 0;
+}
+
 Data::Data(string input, int type){
     switch (type){
         case 0:
@@ -58,6 +63,16 @@ vector<byte> Data::getData() const{
     return data;
 }
 
+byte Data::pop(){
+    byte b = data[data.size()-1];
+    data.pop_back();
+    return b;
+}
+
+void Data::push(byte b){
+    data.push_back(b);
+}
+
 int Data::size() const{
     return data.size();
 }
@@ -80,6 +95,7 @@ void Data::toType(int t){
     if(this->type == 1){
         this->toByteArray();
         this->type = t;
+        return;
     }
     this->type = t;
 }
@@ -114,7 +130,7 @@ bool Data::pkcs7_validate_padding(){
     return cond;
 }
 
-Data operator+(Data& a, Data& b){
+Data operator+(const Data& a, const Data& b){
     Data out (a.size() + b.size());
     for(int i = 0; i < a.size(); ++i){
         out[i] = a[i];
@@ -126,7 +142,7 @@ Data operator+(Data& a, Data& b){
     return out;
 }
 
-Data operator+(Data& a, byte b){
+Data operator+(const Data& a, byte b){
     Data out (a.size() + 1);
     for(int i = 0; i < a.size(); ++i){
         out[i] = a[i];
@@ -154,6 +170,38 @@ byte Data::operator[](int i) const{
     return data[i];
 }
 
+Data operator^(const Data& a, const Data& b){
+    vector<byte> v = a.getData();
+    vector<byte> v2 = b.getData();
+    Data out(repeating_key_xor(v, v2));
+    if(a.getType() == 2) out.setType(0);
+    else out.setType(a.getType());
+    return out;
+}
+
+Data operator^(const Data& a, const vector<byte>& b){
+    vector<byte> v = a.getData();
+    Data out(repeating_key_xor(v, b));
+    if(a.getType() == 2) out.setType(0);
+    else out.setType(a.getType());
+    return out;
+}
+
+Data operator^(const Data& a, string b){
+    vector<byte> v = a.getData();
+    Data out(repeating_key_xor(v, b));
+    if(a.getType() == 2) out.setType(0);
+    else out.setType(a.getType());
+    return out;
+}
+
+Data operator^(const Data& a, byte b){
+    Data out(single_key_xor(a.getData(), b));
+    if(a.getType() == 2) out.setType(0);
+    else out.setType(a.getType());
+    return out;
+}
+
 ostream &operator<<(ostream& os, const Data& d){
     vector<byte> data = d.getData();
     switch (d.getType()){
@@ -179,4 +227,9 @@ ostream &operator<<(ostream& os, const Data& d){
             break;
     }
     return os;
+}
+
+void Data::operator= (const vector<byte>& v){
+    this->data = v;
+    this->type = 0;
 }

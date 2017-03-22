@@ -34,10 +34,11 @@ char letter(byte c){
 
 vector<byte> hexToByteArray(const string& hex){
 	int n;
+	int zero = (hex[1] == 'x' ? 2 : 0);
 	if(hex.size()%2 == 0) n = hex.size()/2;
 	else n = (hex.size()/2) + 1;
 	vector<byte> v (n, 0);
-	for(int i = 0; i < hex.size(); i++){
+	for(int i = 0; i < hex.size() - zero; i++){
 		byte aux = (byte)hexToDec(hex[hex.size()-(i+1)]);
 		if((i+1)%2==0){
 			aux = aux << 4;
@@ -141,7 +142,7 @@ vector<byte> stringToByteArray(const string& str){
     return out;
 }
 
-vector<byte> intToByteArray(const unsigned long int &num, bool invert){
+vector<byte> intToByteArray(const uint64_t &num, bool invert){
     byte *p = (byte*)&num;
     vector<byte> out (sizeof(unsigned long int));
     for(int i = 1; i <= sizeof(unsigned long int); ++i){

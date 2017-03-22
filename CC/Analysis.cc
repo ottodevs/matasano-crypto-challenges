@@ -46,7 +46,7 @@ int hamming_distance(const vector<byte>& x, const vector<byte>& y){
     return total;
 }
 
-int find_key_size(const vector<byte>& blockArray, int a, int b){
+int find_key_size(const Data& blockArray, int a, int b){
 
     cout << "Normalized values:" << endl;
 
@@ -151,11 +151,11 @@ int frequency_evaluation(const vector<byte>& v){
     return score;
 }
 
-vector< vector<byte> > groupBlock(vector<byte> blockArray, int keySize){
+vector<Data> groupBlock(const Data& blockArray, int keySize){
     int n = blockArray.size()/keySize;
     if(blockArray.size() % keySize != 0)
         n++;
-    vector< vector<byte> > groupedBlock (keySize, vector<byte> (n));
+    vector<Data> groupedBlock (keySize, Data(n));
     for (int i = 0; i < blockArray.size(); ++i){
         groupedBlock[i % keySize][(int) i / keySize] = blockArray[i];
     }
@@ -183,11 +183,11 @@ bool is_ECB(const vector<byte>& data){
     return found;
 }
 
-bool mode_detector(vector<byte> (*f)(const vector<byte>&)){
-    vector<byte> v (16*3, 65);
+bool mode_detector(Data (*f)(const Data&)){
+    Data v (16*3, 65);
     v = f(v);
     bool out;
-    if(is_ECB(v)){
+    if(is_ECB(v.getData())){
         cout << "ECB detected" << endl;
         //cout << "---------------------------" << endl;
         out = true;

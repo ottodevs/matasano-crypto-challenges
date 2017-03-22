@@ -3,6 +3,7 @@
 
 #include "utils.cpp"
 #include "Conversion.hh"
+#include "Data.hh"
 #include "Analysis.hh"
 #include <cstdlib>
 #include <time.h>
@@ -24,9 +25,9 @@ extern vector<byte> gen_random_block(); //returns a random 128-bit block
 extern vector<byte> gen_random_bytes(int n);
     /* returns n random bytes. if n < 0 randomizes n between 0 and 15 */
 
-extern void shiftBytes(vector<byte>& v, byte last); //shifts left and assigns last
+extern void shiftBytes(Data& d, byte last); //shifts left and assigns last
 
-extern vector<byte> copyFrom(byte *in, int size);
+Data copyFrom(byte *in, int size);
 
 extern vector<byte> append_arrays(const vector<byte>& array1, const vector<byte>& array2);
 

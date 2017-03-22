@@ -12,7 +12,7 @@ void find_ECB_line(string filename){
             v = hexToByteArray(line);
             if(is_ECB(v)){
                 cout << "Repeating block found at line " << lineNum << ":" << endl;
-                cout << line << endl << endl; 
+                cout << line << endl << endl;
             }
             lineNum++;
         }
@@ -73,15 +73,15 @@ vector<byte> gen_random_bytes(int n){
     return out;
 }
 
-void shiftBytes(vector<byte>& v, byte last){
-    for(int i = 0; i < v.size() - 1; ++i){
-        v[i] = v[i + 1];
+void shiftBytes(Data& d, byte last){
+    for(int i = 0; i < d.size() - 1; ++i){
+        d[i] = d[i + 1];
     }
-    v[v.size() - 1] = last;
+    d[d.size() - 1] = last;
 }
 
-vector<byte> copyFrom(byte *in, int size){
-    vector<byte> out (size);
+Data copyFrom(byte *in, int size){
+    Data out (size);
     for(int i = 0; i < size; ++i){
         out[i] = *in;
         ++in;
@@ -99,8 +99,3 @@ vector<byte> append_arrays(const vector<byte>& array1, const vector<byte>& array
     }
     return out;
 }
-
-
-
-
-

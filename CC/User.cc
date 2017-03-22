@@ -9,7 +9,7 @@ User::User(string email){
         globKey = gen_random_block();
         id_gen++;
     }
-    
+
     for(int i = 0; i < email.size(); ++i){
         if(email[i] == '&' or email[i] == '=')
             email[i] = '*';
@@ -24,23 +24,27 @@ User::User(string email){
 
 }
 
-User::User(const vector<byte>& cipher){
+User::User(const Data& cipher){
     if(id_gen == 0){
         globKey = gen_random_block();
         id_gen++;
     }
-    vector<byte> v = aes_128_ECB_de(cipher, &globKey[0]);
+    Data d = aes_128_ECB_de(cipher, &globKey[0]);
+    d.pkcs7_strip_padding();
+    vector<byte> v = d.getData();
     string str(v.begin(), v.end());
     properties = parse(str);
 }
 
 User::~User(){}
 
-void User::update(const vector<byte>& cipher){
-    vector<byte> v = aes_128_ECB_de(cipher, &User::globKey[0]);
+void User::update(const Data& cipher){
+    Data d = aes_128_ECB_de(cipher, &globKey[0]);
+    d.pkcs7_strip_padding();
+    vector<byte> v = d.getData();
     string str(v.begin(), v.end());
     properties = parse(str);
- 
+
 }
 
 map<string,string> User::parse(string input){
@@ -50,7 +54,7 @@ map<string,string> User::parse(string input){
     int n = 0;
 
     for(int i= 0; i < input.size(); ++i){
-        
+
         if(input[i] == '='){
             vector<char> key (n);
             for(int c = 0; c < n; ++c)
@@ -90,66 +94,66 @@ string User::getString(){
     return "email=" + properties["email"] + "&uid=" + properties["uid"] + "&role=" + properties["role"];
 }
 
-vector<byte> User::getEncryptedProfile(){
+Data User::getEncryptedProfile(){
     string str = getString();
-    vector<byte> v = stringToByteArray(str);
-    return aes_128_ECB_en(v, &User::globKey[0]);
+    Data d(str, 2);
+    return aes_128_ECB_en(d, &User::globKey[0]);
 }
 
-vector<byte> User::encryptData(const string& in){
+Data User::encryptData(const string& in){
 
-    vector<byte> v = stringToByteArray(in);
+    Data d(in, 2);
 
     for(int i = 0; i < in.size(); ++i){
-        if(in[i] == ';' or in[i] == '=') v[i] = (byte)'*';
+        if(in[i] == ';' or in[i] == '=') d[i] = (byte)'*';
     }
 
-    vector<byte> append = stringToByteArray(app);
-    vector<byte> prepend = stringToByteArray(pre);
+    Data append(app, 2);
+    Data prepend(pre, 2);
 
-    vector<byte> data = append_arrays(v, append);
-    data = append_arrays(prepend, data);
+    Data data = prepend + d + append;
     return (aes_128_CBC_en(data, &User::globKey[0], globKey));
- 
+
 }
 
-vector<byte> User::encryptData_CTR(const string& in){
- 
-    vector<byte> v = stringToByteArray(in);
+Data User::encryptData_CTR(const string& in){
+
+    Data d(in, 2);
 
     vector<byte> nonce = intToByteArray(12530, false);
     for(int i = 0; i < in.size(); ++i){
-        if(in[i] == ';' or in[i] == '=') v[i] = (byte)'*';
+        if(in[i] == ';' or in[i] == '=') d[i] = (byte)'*';
     }
 
-    vector<byte> append = stringToByteArray(app);
-    vector<byte> prepend = stringToByteArray(pre);
+    Data append(app, 2);
+    Data prepend(pre, 2);
 
-    vector<byte> data = append_arrays(v, append);
-    data = append_arrays(prepend, data);
+    Data data = prepend + d + append;
     return (aes_128_CTR(data, &User::globKey[0], nonce));
- 
+
 }
 
-bool User::searchString(vector<byte> v){
-    vector<byte> b = aes_128_CBC_de(v, &User::globKey[0], globKey);
+bool User::searchString(const Data& d){
+    Data b = aes_128_CBC_de(d, &User::globKey[0], globKey);
 
-    string str (b.begin(), b.end());
+    vector<byte> v = b.getData();
+    string str (v.begin(), v.end());
     size_t found = str.find(";admin=true;");
     return (found!=string::npos);
 }
 
-bool User::searchString_CTR(vector<byte> v){
+bool User::searchString_CTR(const Data& d){
     vector<byte> nonce = intToByteArray(12530, false);
-    vector<byte> b = aes_128_CTR(v, &User::globKey[0], nonce);
+    Data b = aes_128_CTR(d, &User::globKey[0], nonce);
 
-    string str (b.begin(), b.end());
+    vector<byte> v = b.getData();
+    string str (v.begin(), v.end());
     size_t found = str.find(";admin=true;");
     return (found!=string::npos);
 }
 
-vector<byte> User::check_ascii(vector<byte>& v){
-    vector<byte> b = aes_128_CBC_de(v, &User::globKey[0], globKey);
+Data User::check_ascii(const Data& d){
+    Data b = aes_128_CBC_de(d, &User::globKey[0], globKey);
     bool high_ascii = false;
     for(int i = 0; i < b.size(); ++i){
         if(b[i] > 127) high_ascii = true;
@@ -163,4 +167,3 @@ int User::getUid(){
     stringstream(properties["uid"]) >> out;
     return out;
 }
-

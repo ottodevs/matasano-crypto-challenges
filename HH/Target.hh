@@ -2,6 +2,7 @@
 #define TARGET_HH
 
 #include "utils.cpp"
+#include "Data.hh"
 #include "Aes.hh"
 #include "Block.hh"
 #include "Conversion.hh"
@@ -14,7 +15,7 @@ class Target {
      * Simulated target with methods for encrypting
      */
 private:
-    
+
     vector<byte> secretKey;
 
 public:
@@ -28,16 +29,16 @@ public:
 
     ~Target();
 
-    static vector<byte> rand_encryption(const vector<byte>& data);
+    static Data rand_encryption(const Data& data);
     /* Pads and randomly encrypts ECB/CBC */
 
-    static vector<byte> append_and_encrypt(const vector<byte>& data);
+    static Data append_and_encrypt(const Data& data);
 
-    static vector<byte> prepend_and_encrypt(const vector<byte>& data);
+    static Data prepend_and_encrypt(const Data& data);
 
-    vector<byte> encrypt_CBC(vector<byte>& data); //IV: globKey  AES key: secretKey
+    Data encrypt_CBC(const Data& data); //IV: globKey  AES key: secretKey
 
-    bool padding_oracle(const vector<byte>& v, vector<byte>& iv); //unencrypts
+    bool padding_oracle(const Data v, vector<byte>& iv); //unencrypts
 
     vector<byte> getSecretKey();
 

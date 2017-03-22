@@ -8,6 +8,7 @@
 #include "Conversion.hh"
 #include "Attack.hh"
 #include "Output.hh"
+#include "Data.hh"
 #include "Aes.hh"
 #include "RNG.hh"
 #include "Stream.hh"
@@ -19,28 +20,30 @@ void ch17(){
     vector<string> lines = getStrings("INPUT/ch17.txt");
     time_t secs;
     time(&secs);
-    srand((unsigned int) secs);
+    srand((uint32_t) secs);
     int line = (int) rand() % 10;
 
-    vector<byte> cipher =  b64StringToByteArray(lines[line]);
+    Data cipher(lines[line], 1);
+    cipher.toType(2);
 
-    cipher = google.encrypt_CBC(cipher);
+    Data c2 = google.encrypt_CBC(cipher);
 
-    vector<byte> plain = padding_oracle_attack(cipher, Target::globKey, google);
-    remove_padding(plain);
+    Data plain = padding_oracle_attack(c2, Target::globKey, google);
+    plain.pkcs7_strip_padding();
     cout << "string found!!" << endl;
-    printChar(plain);
-    cout << endl;
+    plain.toType(2);
+    cout << plain << endl;
 }
 
 //Implement CTR
 void ch18(){
-    vector<byte> v = b64StringToByteArray(ch18_str);
-    unsigned long int nc = 0;
+    Data v(ch18_str, 1);
+    v.toType(2);
+    uint64_t nc = 0;
     vector<byte> nonce = intToByteArray(nc, false);
     v = aes_128_CTR(v, keySub, nonce);
-    printChar(v);
-    cout << endl;
+    v.toType(2);
+    cout << v << endl;
 }
 
 //Break fixed-nonce CTR mode (Substitutions)
@@ -58,11 +61,12 @@ void ch19(){
     while(not exit){
         for(int i = 0; i < strings.size(); ++i){
             cout << "[" << i + 1 << "]";
-            vector<byte> v = aes_128_CTR(b64StringToByteArray(strings[i]), keySub, nonce);
+            Data v(strings[i], 1);
+            v.toType(0);
+            v = aes_128_CTR(v, keySub, nonce);
             for(int l = 0; l < v.size(); ++l)
-                v[l] = keys[l] xor v[l];
-            printChar(v);
-            cout << endl;
+                v[l] = v[l] ^ keys[l];
+            cout << v << endl;
         }
         cout << endl << "Add substitution:";
         int line_num, key;
@@ -85,10 +89,16 @@ void ch20(){
     vector<string> strings = getStrings("INPUT/ch20.txt");
     vector<byte> nonce = intToByteArray(0, false);
 
-    vector< vector<byte> > ciphers(strings.size());
+    vector< Data > ciphers(strings.size());
     for(int i = 0; i < ciphers.size(); ++i){
-        ciphers[i] = (aes_128_CTR(b64StringToByteArray(strings[i]), keySub, nonce));
+        if(i != 23){
+            Data d(strings[i], 1);
+            d.toType(2);
+            ciphers[i] = (aes_128_CTR(d, keySub, nonce));
+        }
+        else ciphers[i] = Data("35a4b16bd6cd3390c3ce61321967e306bdcc1fb9fd4d73feabb36cf2dc9a017758d3aeb8781c5f3fe3f59767928ce1bfa7efd95828940d30f1220311ac1d85d1e7e7b25887613c8a49f7e58e82b5b38ae281fae8b2503480", 0);
     }
+    cout << 34343 << endl;
 
     int min_size = ciphers[0].size();
     for(int i = 1; i < ciphers.size(); ++i){
@@ -99,13 +109,13 @@ void ch20(){
 
     for(int i = 0; i < ciphers.size(); ++i){
         while(ciphers[i].size() != min_size)
-            ciphers[i].pop_back();
+            ciphers[i].pop();
     }
-    vector< vector<byte> > groupedBlock(min_size);
+    vector< Data > groupedBlock(min_size);
 
     for(int i = 0; i < groupedBlock.size(); ++i){
         for(int j = 0; j < ciphers.size(); ++j)
-            groupedBlock[i].push_back(ciphers[j][i]);
+            groupedBlock[i].push(ciphers[j][i]);
     }
 
     vector<byte> keyV = findRepeatingKey(groupedBlock);
@@ -127,7 +137,8 @@ void ch20(){
     for(int i = 0; i < strings.size(); ++i){
         if(i % min_size == 0)
             cout << endl;
-        vector<byte> plain = repeating_key_xor(ciphers[i], keyV);
+        vector<byte> vb = ciphers[i].getData();
+        vector<byte> plain = repeating_key_xor(vb, keyV);
 
         printChar(plain);
         cout << endl;
@@ -178,10 +189,10 @@ void ch22(){
 //Clone an MT19937 RNG from its output
 void ch23(){
     rng rand(453256);
-    unsigned int state[624];
+    uint32_t state[624];
     cout << "generator output(numbers 625-645):" << endl;
     for(int i = 0; i < 624; ++i){
-        unsigned int n = rand.extract_number();
+        uint32_t n = rand.extract_number();
         state[i] = mt19937_untemper(n);
     }
     for(int i = 0; i < 20; ++i)
@@ -195,9 +206,9 @@ void ch23(){
 //Create the MT19937 stream cipher and break it
 void ch24(){
     string message = "AAAAAAAAAAAAAA";
-    vector<byte> v = stringToByteArray(message);
-    vector<byte> p = gen_random_bytes(-1);
-    v = append_arrays(p, v);
+    Data v(message, 2);
+    Data p(gen_random_bytes(-1));
+    v = p + v;
     v = mt19937(v, 33212);
     int key;
     bool found = false;
@@ -212,17 +223,17 @@ void ch24(){
     key--;
     if(found){
         cout << "key: " << key << endl;
-        printChar(p);
-        cout << endl;
+        p.toType(2);
+        cout << p << endl;
     }
     else cout << "not found" << endl;
     cout << endl << "-----------------------" << endl << endl;
 
     time_t now = time(0);
     rng gen(now);
-    unsigned int n1 = gen.extract_number();
+    uint32_t n1 = gen.extract_number();
     gen.seed(234321);
-    unsigned int n2 = gen.extract_number();
+    uint32_t n2 = gen.extract_number();
 
     if(is_time_seeded(n1, 500)) cout << "is time seeded" << endl;
     else cout << "not timeseeded" << endl;

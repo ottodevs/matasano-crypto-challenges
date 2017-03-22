@@ -2,15 +2,15 @@
 
 
 void searchOnFile(const string filename, int thres){
-    vector<byte> v;
+    Data d;
     ifstream cypherfile;
     cypherfile.open(&filename[0]);
     string line;
     if (cypherfile.is_open()){
         int count = 1;
         while(getline (cypherfile,line)){
-            v = hexToByteArray(line);
-            if(testBytes(v, thres))
+            d = Data(line);
+            if(testBytes(d, thres))
                 cout << "line " << count << endl;
             count++;
         }

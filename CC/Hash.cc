@@ -30,7 +30,7 @@ vector<byte> sha1(vector<byte> message){
 	//process
 	vector< vector<byte> > chunks;
 	for(int i = 0; i < message.size(); i += 64)
-		chunks.push_back(copyFrom(&message[i], 64));
+		chunks.push_back(copyFrom(&message[i], 64).getData());
 	for(int n = 0; n < chunks.size(); ++n){ //chunks[n]
 		//16 32bit words w[i]
 		vector<uint32_t> w (80);
@@ -119,7 +119,7 @@ vector<byte> sha1(vector<byte> message, uint32_t h0, uint32_t h1, uint32_t h2, u
 	//process
 	vector< vector<byte> > chunks;
 	for(int i = 0; i < message.size(); i += 64)
-		chunks.push_back(copyFrom(&message[i], 64));
+		chunks.push_back(copyFrom(&message[i], 64).getData());
 	for(int n = 0; n < chunks.size(); ++n){ //chunks[n]
 		//16 32bit words w[i]
 		vector<uint32_t> w (80);
@@ -215,7 +215,7 @@ vector<byte> md4(vector<byte> message){
 	//4. Process Message in 16-Word Blocks
 	vector< vector<byte> > blocks;
 	for(int i = 0; i < message.size(); i += 64)
-		blocks.push_back(copyFrom(&message[i], 64));
+		blocks.push_back(copyFrom(&message[i], 64).getData());
 	for(int n = 0; n < blocks.size(); ++n){
 		uint32_t X[16];
 		for(int i = 0; i < 16; i++){
@@ -311,7 +311,7 @@ vector<byte> md4(vector<byte> message, uint32_t a, uint32_t b, uint32_t c, uint3
 	//4. Process Message in 16-Word Blocks
 	vector< vector<byte> > blocks;
 	for(int i = 0; i < message.size(); i += 64)
-		blocks.push_back(copyFrom(&message[i], 64));
+		blocks.push_back(copyFrom(&message[i], 64).getData());
 	for(int n = 0; n < blocks.size(); ++n){
 		uint32_t X[16];
 		for(int i = 0; i < 16; i++){

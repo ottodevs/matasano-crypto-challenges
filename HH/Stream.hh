@@ -7,11 +7,12 @@
 #include "Aes.hh"
 #include "Block.hh"
 #include "Output.hh"
+#include "Data.hh"
 
-extern vector<byte> mt19937(vector<byte>& plain, int seed);
+extern Data mt19937(Data& plain, int seed);
 /* mt19937 Stream cipher */
 
-extern vector<byte> edit_CTR(vector<byte>& cipher, const byte key[], vector<byte>& nonce, int offset, vector<byte>& newtext);
+extern Data edit_CTR(Data& cipher, const byte key[], vector<byte>& nonce, int offset, Data& newtext);
 /* edits the cipher text with the newtext in the offset position */
 
 #endif

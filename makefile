@@ -1,6 +1,6 @@
 Cpp = g++
 
-OPT = -std=c++0x -lssl -lcrypto
+OPT = -std=c++11 -lssl -lcrypto
 CC=./CC/*.cc
 HH=./HH
 OBJECTS=*.o

@@ -7,23 +7,23 @@
  * contains methods for printing
  * data in different types
  */
- 
+
 extern void printB64(const vector<byte>& v);
-    /* byte array is printed as base64 */
+/* byte array is printed as base64 */
 
 
 extern void printHex(const vector<byte>& v);
-    /* byte array is printed Hex encoded */
+/* byte array is printed Hex encoded */
 
 extern void printInt(const vector<byte>& v);
-    /* byte array is printed as int values */
+/* byte array is printed as int values */
 
 extern void printChar(const vector<byte>& v);
-    /* byte array is printed as char array */
+/* byte array is printed as char array */
 
 extern void printAscii(int i);
 extern void printAscii(byte i);
-    /* Outputs ascii characters if they are letters or common symbols
-     * For other characters it outputs as \int */
+/* Outputs ascii characters if they are letters or common symbols
+ * For other characters it outputs as \int */
 
-#endif
+#endif // ifndef OUTPUT_HH

@@ -90,7 +90,6 @@ Data aes_128_CTR(const Data& d, const byte keyS[], const vector<byte>& nonce){
     uint64_t counter = 0;
     uint64_t size = (uint64_t)v.size()/16;
     if(v.size()%16 != 0) size++;
-    cout << "h" << endl;
     for (counter = 0; counter < size; ++counter){
         vector<byte> run = append_arrays(nonce, intToByteArray(counter, false));
         run = aes_encrypt(&run[0], keyS);
@@ -99,6 +98,5 @@ Data aes_128_CTR(const Data& d, const byte keyS[], const vector<byte>& nonce){
                 ret[counter*16 + i] = run[i] xor v[counter*16 + i];
         }
     }
-    cout << "e" << endl;
     return Data(ret);
 }

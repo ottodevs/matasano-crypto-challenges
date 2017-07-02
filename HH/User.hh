@@ -10,42 +10,42 @@
 #include <sstream>
 
 class User {
-    /* user identity with various properties */
+/* user identity with various properties */
 
 private:
 
-    static int id_gen;
-    static vector<byte> globKey;
+static int id_gen;
+static vector<byte> globKey;
 
 public:
 
-    map<string,string> properties;
+map<string, string> properties;
 
-    User(string email);
+User(string email);
 
-    User(const Data& cipher);
+User(const Data& cipher);
 
-    ~User();
+~User();
 
-    void update(const Data& cipher);
+void update(const Data& cipher);
 
-    static map<string,string> parse(string input);
+static map<string, string> parse(string input);
 
-    string getString();
+string getString();
 
-    Data getEncryptedProfile();
+Data getEncryptedProfile();
 
-    static Data encryptData(const string& in);
+static Data encryptData(const string& in);
 
-    static Data encryptData_CTR(const string& in);
+static Data encryptData_CTR(const string& in);
 
-    static bool searchString(const Data& d); //unencrypts and searches for string ";admin=true;"
-    static bool searchString_CTR(const Data& d);
+static bool searchString(const Data& d);     // unencrypts and searches for string ";admin=true;"
+static bool searchString_CTR(const Data& d);
 
-    //returns decrypted vector if high ascii is found, else returns an empty vector
-    static Data check_ascii(const Data& d);
+// returns decrypted vector if high ascii is found, else returns an empty vector
+static Data check_ascii(const Data& d);
 
-    int getUid();
+int getUid();
 
 };
-#endif
+#endif // ifndef USER_HH

@@ -10,20 +10,22 @@
 #include "Attack.hh"
 #include "Analysis.hh"
 
-//Implement PKCS#7 padding
+// Implement PKCS#7 padding
 void ch9(){
     string ys = "YELLOW SUBMARINE";
     Data d(ys, 2);
+
     d.pkcs7_pad(20);
     cout << d << endl;
 }
 
-//Implement CBC mode
+// Implement CBC mode
 /*
  * SOL: same lyrics as in set 1. Somebody really likes this song
  */
 void ch10(){
     Data d = Data(fetchFromFile("INPUT/ch10.txt"));
+
     vector<byte> iv(16, 0);
     d = aes_128_CBC_de(d, keySub, iv);
     d.pkcs7_strip_padding();
@@ -31,12 +33,12 @@ void ch10(){
     cout << d << endl;
 }
 
-//An ECB/CBC detection oracle
+// An ECB/CBC detection oracle
 void ch11(){
     mode_detector(Target::rand_encryption);
 }
 
-//Byte-at-a-time ECB decryption(Simple)
+// Byte-at-a-time ECB decryption(Simple)
 /*
  * SOL: more pop lyrics, but different this time
  */
@@ -45,10 +47,11 @@ void ch12(){
     byte_at_a_time(Target::append_and_encrypt);
 }
 
-//ECB cut-and-paste
+// ECB cut-and-paste
 void ch13(){
 
     Data admin_str("XXXXXXXXXXadmin", 2);
+
     admin_str.pkcs7_pad(16 + 10);
     vector<byte> av = admin_str.getData();
     string mail(av.begin(), av.end());
@@ -57,62 +60,62 @@ void ch13(){
 
     Data cipher = mike.getEncryptedProfile();
 
-    //cut and paste
-    vector<byte> block1 (16);
-    for(int i = 0; i < 16; ++i)
-        block1[i] = cipher[i+16];
-    for(int i = 0; i < 16; ++i){
-        cipher[i+16] = cipher[16*3 + i];
-        cipher[16*3 + i] = block1[i];
+    // cut and paste
+    vector<byte> block1(16);
+    for (int i = 0; i < 16; ++i) {
+        block1[i] = cipher[i + 16];
+    }
+    for (int i = 0; i < 16; ++i) {
+        cipher[i + 16] = cipher[16 * 3 + i];
+        cipher[16 * 3 + i] = block1[i];
     }
 
     mike.update(cipher);
     string ss = mike.getString();
     Data dd(ss, 2);
     cout << dd << endl;
-}
+} // ch13
 
-//Byte-at-a-time ECB decryption(Harder)
+// Byte-at-a-time ECB decryption(Harder)
 void ch14(){
     Target::globKey = gen_random_block();
     Target::prepend = gen_random_bytes(-1);
     byte_at_a_time(Target::prepend_and_encrypt);
 }
 
-//PKCS#7 padding validation
+// PKCS#7 padding validation
 void ch15(){
     Data d(ch15_str, 2);
+
     d.pkcs7_pad(16);
     cout << d << endl;
-    if(d.pkcs7_validate_padding()){
+    if (d.pkcs7_validate_padding()) {
         d.pkcs7_strip_padding();
         cout << endl << "padding removed" << endl;
-    }
-    else cout << endl << "incorrect padding" << endl;
-    Data b (4,5);
+    } else cout << endl << "incorrect padding" << endl;
+    Data b(4, 5);
     d += b;
     cout << d << endl;
-    if(d.pkcs7_validate_padding()){
+    if (d.pkcs7_validate_padding()) {
         d.pkcs7_strip_padding();
         cout << endl << "padding removed" << endl;
-    }
-    else cout << endl << "incorrect padding" << endl;
+    } else cout << endl << "incorrect padding" << endl;
 }
 
-//CBC bitflipping attacks
+// CBC bitflipping attacks
 void ch16(){
-    //we use the previous chars to the forbidden ones on the ascii table and then apply a mask to change the last bit
+    // we use the previous chars to the forbidden ones on the ascii table and then apply a mask to change the last bit
     string obj = ":admin<true:";
 
     Data d = User::encryptData(obj);
 
-    vector<byte> mask (d.size(), 0);
+    vector<byte> mask(d.size(), 0);
     mask[16] = 1;
     mask[16 + 6] = 1;
     mask[16 + 11] = 1;
     d = d ^ mask;
 
-    if(User::searchString(d)) cout << "admin" << endl;
+    if (User::searchString(d)) cout << "admin" << endl;
     else cout << "not admin" << endl;
 }
 
@@ -121,9 +124,10 @@ void ch16(){
  */
 int main(){
     int ch;
+
     cout << "[9-16]" << endl;
     cin >> ch;
-    switch(ch){
+    switch (ch) {
         case 9:
             ch9();
             break;
@@ -148,5 +152,5 @@ int main(){
         case 16:
             ch16();
             break;
-    }
-}
+    } // switch
+} // main

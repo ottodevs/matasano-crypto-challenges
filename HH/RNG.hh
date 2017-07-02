@@ -4,32 +4,32 @@
 #include "utils.cpp"
 
 class rng {
-    /* Implementation of the mt19937 mersenne twister RNG */
+/* Implementation of the mt19937 mersenne twister RNG */
 
 private:
 
-    int index;
-    unsigned int MT[624];
+int index;
+unsigned int MT[624];
 
 public:
 
-    rng();
+rng();
 
-    //create rng from seed
-    rng(int seed);
+// create rng from seed
+rng(int seed);
 
-    //create rng from state
-    rng(uint32_t* s);
+// create rng from state
+rng(uint32_t * s);
 
-    void seed(int seed);
+void seed(int seed);
 
-    uint32_t extract_number();
+uint32_t extract_number();
 
-    void generate_numbers();
+void generate_numbers();
 
-    void set_index(int i);
+void set_index(int i);
 
-    uint32_t* get_state();
+uint32_t * get_state();
 
 };
-#endif
+#endif // ifndef RNG_HH

@@ -5,7 +5,7 @@
 #include "Block.hh"
 #include "Data.hh"
 #include "Output.hh"
-//#include <openssl/sha.h>
+// #include <openssl/sha.h>
 
 extern vector<byte> sha1_mac(const vector<byte>& prefix, const vector<byte>& message);
 extern vector<byte> md4_mac(const vector<byte>& prefix, const vector<byte>& message);
@@ -25,12 +25,12 @@ extern uint32_t md4_h(uint32_t x, uint32_t y, uint32_t z);
 
 extern void change_endian(uint32_t& n);
 
-extern uint32_t uint32_from_array(byte* ini);
-extern uint32_t int_from_array(byte* ini);
+extern uint32_t uint32_from_array(byte * ini);
+extern uint32_t int_from_array(byte * ini);
 
 extern uint32_t leftrotate(uint32_t n, int r);
 
 extern vector<byte> sha1_glue_padding(int key_length, int message_length);
 extern vector<byte> md4_glue_padding(int key_length, int message_length);
 
-#endif
+#endif // ifndef HASH_HH

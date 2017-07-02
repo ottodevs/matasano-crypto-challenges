@@ -11,36 +11,36 @@
 #include "Output.hh"
 
 class Target {
-    /*
-     * Simulated target with methods for encrypting
-     */
+/*
+ * Simulated target with methods for encrypting
+ */
 private:
 
-    vector<byte> secretKey;
+vector<byte> secretKey;
 
 public:
 
-    static vector<byte> globKey;
-    static vector<byte> prepend;
-    /* needs to be initialized in global scope:
-     * vector<byte> globKey(16,0); */
+static vector<byte> globKey;
+static vector<byte> prepend;
+/* needs to be initialized in global scope:
+ * vector<byte> globKey(16,0); */
 
-    Target();
+Target();
 
-    ~Target();
+~Target();
 
-    static Data rand_encryption(const Data& data);
-    /* Pads and randomly encrypts ECB/CBC */
+static Data rand_encryption(const Data& data);
+/* Pads and randomly encrypts ECB/CBC */
 
-    static Data append_and_encrypt(const Data& data);
+static Data append_and_encrypt(const Data& data);
 
-    static Data prepend_and_encrypt(const Data& data);
+static Data prepend_and_encrypt(const Data& data);
 
-    Data encrypt_CBC(const Data& data); //IV: globKey  AES key: secretKey
+Data encrypt_CBC(const Data& data);     // IV: globKey  AES key: secretKey
 
-    bool padding_oracle(const Data v, vector<byte>& iv); //unencrypts
+bool padding_oracle(const Data v, vector<byte>& iv);     // unencrypts
 
-    vector<byte> getSecretKey();
+vector<byte> getSecretKey();
 
 };
-#endif
+#endif // ifndef TARGET_HH
